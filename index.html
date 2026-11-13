@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Yatripath</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+
+<!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER -->
+        <header>
+            <nav class="NAVBAR">
+                <div class="CONTAINER-FOR-LOGO">
+                <!-- Brand -->
+                    <a href="#" class="LOGO" aria-label="Yatripath home">
+                        <img src="Images/logo.png" alt="Yatripath">
+                    </a>
+                    <a href="#" class="LOGO">Yatripath</a>
+                </div>
+
+    <button
+        type="button"
+        class="MOBILE-MENU-TOGGLE"
+        id="mobile-menu-toggle"
+        aria-label="Open navigation menu"
+        aria-controls="nav-menu"
+        aria-expanded="false">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+
+     <div class="NAV-MENU" id="nav-menu">
+
+        <!-- Navigation links -->
+    <ul class="NAV-LINKS">
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-suitcase-rolling"></i>
+                My Trips
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-ticket"></i>
+                Track Ticket
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-regular fa-bookmark"></i>
+                Saved Routes
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-regular fa-circle-question"></i>
+                Need Help?
+            </a>
+        </li>
+    </ul>
+
+    <!-- Right-side actions -->
+    <div class="NAV-ACTIONS">
+
+        <button class="THEME-BTN" id="theme-toggle"
+                type="button" aria-label="Switch to dark theme">
+            <i class="fa-regular fa-moon"></i>
+        </button>
+
+        <a href="#" class="SIGNUP-BTN">Sign Up</a>
+
+        <a href="#" class="LOGIN-BTN">Log In</a>
+
+    </div>
+
+    </div>
+            </nav>
+        </header>
+
+
+<!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN --><!-- MAIN -->        
+
+<main>
+    <section class="HERO">
+        <div class="HERO-LAYOUT">
+        <div class="HERO-LEFT">
+        <div class="HERO-CONTENT">
+            <p class="HERO-TAGLINE">Visit entire India with Yatripath</p>
+
+            <h1>
+                Your journey,
+                <span>Our responsibility.</span>
+            </h1>
+
+            <p class="HERO-DESCRIPTION">
+                Find and connect flights, trains and buses
+                in one seamless search.
+            </p>
+        </div>
+
+        <div class="SEARCH-CARD">
+
+            <div class="TRANSPORT-TABS">
+                <label class="TRANSPORT-OPTION">
+                    <input type="radio" name="transport" value="all" checked>
+                    <span><i class="fa-solid fa-route"></i> Multi Mode</span>
+                </label>
+
+                <label class="TRANSPORT-OPTION">
+                    <input type="radio" name="transport" value="flight">
+                    <span><i class="fa-solid fa-plane"></i> Flights</span>
+                </label>
+
+                <label class="TRANSPORT-OPTION">
+                    <input type="radio" name="transport" value="train">
+                    <span><i class="fa-solid fa-train"></i> Trains</span>
+                </label>
+
+                <label class="TRANSPORT-OPTION">
+                    <input type="radio" name="transport" value="bus">
+                    <span><i class="fa-solid fa-bus"></i> Buses</span>
+                </label>
+            </div>
+
+            <form class="SEARCH-FORM" id="journey-search" novalidate>
+
+                <div class="SEARCH-FIELD">
+                    <label for="origin">FROM</label>
+                    <div class="FIELD-INPUT">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input
+                            type="text"
+                            id="origin"
+                            name="origin"
+                            placeholder="Departure city"
+                            list="city-suggestions"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="SWAP-BTN"
+                    id="swap-locations"
+                    aria-label="Swap departure and destination"
+                    title="Swap locations"
+                >
+                    <i class="fa-solid fa-right-left"></i>
+                </button>
+
+                <div class="SEARCH-FIELD">
+                    <label for="destination">TO</label>
+                    <div class="FIELD-INPUT">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input
+                            type="text"
+                            id="destination"
+                            name="destination"
+                            placeholder="Destination city"
+                            list="city-suggestions"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="SEARCH-FIELD">
+                    <label for="departure">DEPARTURE</label>
+                    <div class="FIELD-INPUT">
+                        <i class="fa-regular fa-calendar"></i>
+                        <input
+                            type="date"
+                            id="departure"
+                            name="departure"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="SEARCH-FIELD">
+                    <label for="return-date">RETURN</label>
+                    <div class="FIELD-INPUT">
+                        <i class="fa-regular fa-calendar"></i>
+                        <input
+                            type="date"
+                            id="return-date"
+                            name="return-date"
+                        >
+                    </div>
+                </div>
+
+                <!-- Travellers and travel class -->
+<div class="SEARCH-FIELD TRAVELLER-FIELD">
+
+    <label>TRAVELLERS</label>
+
+    <!-- Button that opens the passenger selector -->
+    <button
+        type="button"
+        class="TRAVELLER-TRIGGER"
+        id="traveller-trigger"
+        aria-expanded="false"
+        aria-controls="traveller-popup"
+    >
+        <span class="TRAVELLER-SUMMARY">
+            <i class="fa-solid fa-user-group"></i>
+            <span id="traveller-summary">1 Adult · Economy</span>
+        </span>
+
+        <i class="fa-solid fa-chevron-down TRAVELLER-CHEVRON"></i>
+    </button>
+
+    <!-- Popup -->
+    <div class="TRAVELLER-POPOVER" id="traveller-popup" hidden>
+
+        <div class="TRAVELLER-POPUP-HEADER">
+            <div>
+                <h3>Travellers & Class</h3>
+                <p>Choose who's travelling</p>
+            </div>
+
+            <button
+                type="button"
+                class="TRAVELLER-CLOSE"
+                id="traveller-close"
+                aria-label="Close traveller selector"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Adults -->
+        <div class="PASSENGER-GROUP ADULT-GROUP">
+            <div class="PASSENGER-HEADING">
+                <strong>Adults</strong>
+                <span>12 years and above</span>
+            </div>
+
+            <div class="COUNT-OPTIONS" data-passenger="adults">
+                <button type="button" data-count="1" class="is-selected">1</button>
+                <button type="button" data-count="2">2</button>
+                <button type="button" data-count="3">3</button>
+                <button type="button" data-count="4">4</button>
+                <button type="button" data-count="5">5</button>
+                <button type="button" data-count="6">6</button>
+                <button type="button" data-count="7">7</button>
+                <button type="button" data-count="8">8</button>
+                <button type="button" data-count="9">9</button>
+                <button type="button" data-count="more">9+</button>            
+            </div>
+        </div>
+
+        <!-- Children -->
+        <div class="PASSENGER-GROUP">
+            <div class="PASSENGER-HEADING">
+                <strong>Children</strong>
+                <span>2–11 years</span>
+            </div>
+
+            <div class="COUNT-OPTIONS" data-passenger="children">
+                <button type="button" data-count="0" class="is-selected">0</button>
+                <button type="button" data-count="1">1</button>
+                <button type="button" data-count="2">2</button>
+                <button type="button" data-count="3">3</button>
+                <button type="button" data-count="4">4</button>
+                <button type="button" data-count="5">5</button>
+                <button type="button" data-count="6">6</button>
+                <button type="button" data-count="more">6+</button>
+            </div>
+        </div>
+
+        <!-- Infants -->
+        <div class="PASSENGER-GROUP">
+            <div class="PASSENGER-HEADING">
+                <strong>Infants</strong>
+                <span>Under 2 years</span>
+            </div>
+
+            <div class="COUNT-OPTIONS" data-passenger="infants">
+                <button type="button" data-count="0" class="is-selected">0</button>
+                <button type="button" data-count="1">1</button>
+                <button type="button" data-count="2">2</button>
+                <button type="button" data-count="3">3</button>
+                <button type="button" data-count="4">4</button>
+                <button type="button" data-count="5">5</button>
+                <button type="button" data-count="6">6</button>
+                <button type="button" data-count="more">6+</button>
+            </div>
+
+            <p class="PASSENGER-HELP" id="infant-help">
+                Each infant must be accompanied by an adult.
+            </p>
+        </div>
+
+        <!-- Travel class -->
+        <div class="TRAVEL-CLASS-GROUP">
+            <label for="travel-class">Travel class</label>
+
+            <select id="travel-class" name="travel_class">
+                <option value="economy">Economy/Premium Economy</option>
+                <option value="premium-economy">Premium Economy</option>
+                <option value="business">Business</option>
+                <option value="first-class">First Class</option>
+            </select>
+        </div>
+
+        <!-- Popup footer -->
+        <div class="TRAVELLER-POPUP-FOOTER">
+            <span id="passenger-total">1 passenger</span>
+
+            <button type="button" id="apply-travellers">
+                Apply
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Values submitted with the search form -->
+    <input type="hidden" id="travellers" name="travellers" value="1">
+    <input type="hidden" id="adults" name="adults" value="1">
+    <input type="hidden" id="children" name="children" value="0">
+    <input type="hidden" id="infants" name="infants" value="0">
+
+</div>
+
+                <button type="submit" class="SEARCH-BTN">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search Journeys
+                </button>
+
+            </form>
+            <datalist id="city-suggestions">
+                <option value="Kolkata">
+                <option value="New Delhi">
+                <option value="Mumbai">
+                <option value="Bengaluru">
+                <option value="Chennai">
+                <option value="Hyderabad">
+                <option value="Pune">
+                <option value="Jaipur">
+                <option value="Lucknow">
+                <option value="Bhubaneswar">
+                <option value="Patna">
+                <option value="Guwahati">
+                <option value="Siliguri">
+                <option value="Darjeeling">
+                <option value="Durgapur">
+            </datalist>
+        </div>
+        </div>
+
+<!-- RIGHT BOX: travel image -->
+        <div class="HERO-IMAGE">
+            <img
+                src="https://i.pinimg.com/originals/f4/bd/58/f4bd584b814955527853951d91ccd299.jpg"
+                alt="Scenic mountain landscape"
+            >
+        </div>
+
+        </div>
+
+        <p class="SEARCH-NOTE">
+            <i class="fa-solid fa-shield-halved"></i>
+            Compare travel options in one place.
+        </p>
+        
+    </section>
+
+    
+<!-- WHY TRAVELLEON SECTION -->
+<section class="WHY-TRAVELLEON" id="why-travelleon">
+
+    <div class="WHY-HEADER">
+        <p class="WHY-TAGLINE">THE YATRIPATH ADVANTAGE</p>
+
+        <h2>
+            Travel smarter,
+            <span>travel simpler.</span>
+        </h2>
+
+        <p class="WHY-DESCRIPTION">
+            Everything you need to explore your travel options,
+            all in one place.
+        </p>
+    </div>
+
+    <div class="WHY-CARDS">
+
+        <!-- Feature 1 -->
+        <article class="WHY-CARD">
+            <div class="WHY-ICON">
+                <i class="fa-solid fa-route"></i>
+            </div>
+
+            <h3>One Search, Multiple Modes</h3>
+
+            <p>
+                Explore flights, trains and buses through
+                one convenient search experience.
+            </p>
+        </article>
+
+        <!-- Feature 2 -->
+        <article class="WHY-CARD">
+            <div class="WHY-ICON">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+
+            <h3>Compare Your Options</h3>
+
+            <p>
+                Discover different ways to reach your
+                destination and choose what suits your journey.
+            </p>
+        </article>
+
+        <!-- Feature 3 -->
+        <article class="WHY-CARD">
+            <div class="WHY-ICON">
+                <i class="fa-regular fa-bookmark"></i>
+            </div>
+            <h3>Your Routes, Your Way</h3>
+            <p>
+                Keep your favourite routes in mind
+                for easier planning of future journeys.
+            </p>
+        </article>
+    </div>
+</section>
+</main>
+
+
+<!-- LOGIN / SIGN UP VIEW -->
+<section class="AUTH-VIEW" id="auth-view" hidden>
+
+    <!-- LEFT: AUTHENTICATION FORM -->
+    <div class="AUTH-CARD">
+
+        <a href="#" class="AUTH-BACK" id="back-home">
+            ← Back to Home
+        </a>
+
+        <div class="AUTH-LOGO">
+            <a href="#" class="LOGO" aria-label="Yatripath home">
+                        <img src="Images/logo.png" alt="Yatripath">
+                    </a>
+            <span>Yatripath</span>
+        </div>
+
+        <h1 id="auth-heading">Welcome back!</h1>
+        <p class="AUTH-SUBTITLE" id="auth-subtitle">
+            Sign in to continue your journey.
+        </p>
+
+        <div class="AUTH-TABS">
+            <button type="button" class="AUTH-TAB ACTIVE" id="login-tab">
+                Log In
+            </button>
+            <button type="button" class="AUTH-TAB" id="signup-tab">
+                Sign Up
+            </button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="login-form">
+
+            <label for="login-email">Email address</label>
+            <input type="email" id="login-email" name="email"
+                placeholder="you@example.com" autocomplete="email" required>
+
+            <label for="login-password">Password</label>
+            <div class="AUTH-PASSWORD">
+                <input type="password" id="login-password"
+                       placeholder="Enter your password"
+                       autocomplete="current-password" required>
+                <button type="button" class="AUTH-TOGGLE"
+                    data-password="login-password"
+                    aria-label="Show password"
+                    aria-pressed="false">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="AUTH-SUBMIT">Log In</button>
+
+        </form>
+
+        <!-- SIGNUP FORM -->
+        <form id="signup-form" hidden>
+
+            <label for="signup-name">Full name</label>
+            <input type="text" id="signup-name"
+                   placeholder="Your full name"
+                   autocomplete="name" required>
+
+            <label for="signup-dob">Date of birth</label>
+            <input type="date" id="signup-dob"
+                   autocomplete="bday" required>
+
+            <label for="signup-email">Email address</label>
+            <input type="email" id="signup-email" name="email"
+                   placeholder="you@example.com"
+                   autocomplete="email" required>
+
+            <div class="OTP-ROW">
+                <label for="email-otp">Email verification</label>
+                <button type="button" class="OTP-BTN" data-otp="email">
+                    Send code
+                </button>
+            </div>
+
+            <input type="text" id="email-otp"
+                   placeholder="Enter email OTP"
+                   inputmode="numeric" pattern="[0-9]{6}"
+                   maxlength="6" autocomplete="one-time-code"
+                   aria-label="Email verification code">
+
+            <label for="signup-phone">Phone number</label>
+            <div class="PHONE-ROW">
+                <select id="phone-country" aria-label="Country calling code">
+                    <option value="+91">🇮🇳 +91</option>
+                </select>
+
+                <input type="tel" id="signup-phone"
+                       placeholder="Phone number"
+                       autocomplete="tel-national"
+                       inputmode="tel" required>
+            </div>
+
+            <div class="OTP-ROW">
+                <label for="phone-otp">Phone verification</label>
+                <button type="button" class="OTP-BTN" data-otp="phone">
+                    Send code
+                </button>
+            </div>
+
+            <input type="text" id="phone-otp"
+                   placeholder="Enter SMS OTP"
+                   inputmode="numeric" pattern="[0-9]{6}"
+                   maxlength="6" aria-label="Phone verification code">
+
+            <label for="signup-password">Create password</label>
+            <div class="AUTH-PASSWORD">
+                <input type="password" id="signup-password"
+                       placeholder="Create a strong password"
+                       autocomplete="new-password" required>
+                <button type="button" class="AUTH-TOGGLE"
+                    data-password="signup-password"
+                    aria-label="Show password"
+                    aria-pressed="false">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="PASSWORD-RULES" id="password-rules" hidden>
+                <p id="rule-length">○ At least 8 characters</p>
+                <p id="rule-upper">○ One uppercase letter (A–Z)</p>
+                <p id="rule-lower">○ One lowercase letter (a–z)</p>
+                <p id="rule-number">○ One number (0–9)</p>
+                <p id="rule-special">○ One special character (!@#$...)</p>
+            </div>
+
+            <button type="submit" class="AUTH-SUBMIT">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="AUTH-MESSAGE" id="auth-message"
+           role="status" aria-live="polite"></p>
+
+        <p class="AUTH-FOOTNOTE">
+            Your next journey starts here.
+        </p>
+
+    </div>
+
+    <!-- RIGHT: TRAVEL IMAGE -->
+    <div class="AUTH-VISUAL">
+        <img
+            src="https://i.pinimg.com/originals/f4/bd/58/f4bd584b814955527853951d91ccd299.jpg"
+            alt="Majestic mountain landscape beneath a beautiful sky">
+
+        <div class="AUTH-VISUAL-OVERLAY">
+            <span class="AUTH-IMAGE-TAG">YOUR JOURNEY STARTS HERE</span>
+            <h2>The world is waiting.</h2>
+            <p>Discover new places. Find your route. Make every journey count.</p>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+        <footer class="SITE-FOOTER">
+            <p>
+               © 2026 Yatripath. All rights reserved.
+                <span class="FOOTER-DIVIDER">|</span>
+                <a href="#" id="terms-link">Terms and Conditions</a>
+            </p>
+        </footer>
+
+        <script src="script.js"></script>
+    </body>
+</html>
