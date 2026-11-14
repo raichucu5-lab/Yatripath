@@ -514,12 +514,17 @@ backHome.addEventListener("click", (event) => {
 
 loginButton?.addEventListener("click", (event) => {
     event.preventDefault();
-    showAuthPage("login");
+    if (localStorage.getItem("token")) {
+        localStorage.clear();
+        updateNavbar();
+    } else {
+        showAuthPage("login");
+    }
 });
 
 signupButton?.addEventListener("click", (event) => {
     event.preventDefault();
-    showAuthPage("signup");
+    if (!localStorage.getItem("token")) showAuthPage("signup");
 });
 
 // Eye emoji password visibility toggle.
@@ -647,16 +652,27 @@ document.querySelectorAll("[data-otp]").forEach((button) => {
     });
 });
 
-// Login UI submission.
-loginForm.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    authMessage.textContent =
-        "Your login form is ready. Real account authentication still needs to be connected.";
+    try {
+        const data = await api("/auth/login", {
+            method: "POST",
+            body: {
+                email: document.getElementById("login-email").value.trim(),
+                password: document.getElementById("login-password").value
+            }
+        });
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("userName", data.name);
+        updateNavbar();
+        hideAuthPage();
+    } catch (err) {
+        authMessage.textContent = err.message;
+    }
 });
 
 // Signup UI submission.
-signupForm.addEventListener("submit", (event) => {
+signupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!checkPassword(signupPassword.value)) {
@@ -673,8 +689,22 @@ signupForm.addEventListener("submit", (event) => {
         return;
     }
 
-    authMessage.textContent =
-        "Your form passed the basic checks. Account creation and email/phone OTP verification still need to be connected.";
+      try {
+        await api("/auth/register", {
+            method: "POST",
+            body: {
+                full_name: document.getElementById("signup-name").value.trim(),
+                email: document.getElementById("signup-email").value.trim(),
+                password: signupPassword.value,
+                date_of_birth: signupDob.value,
+                phone: document.getElementById("phone-country").value + document.getElementById("signup-phone").value.trim()
+            }
+        });
+        authMessage.textContent = "Account created. Please log in.";
+        setAuthMode("login");
+    } catch (err) {
+        authMessage.textContent = err.message;
+    }
 });
 
 
@@ -780,3 +810,10 @@ if (document.readyState === "loading") {
     restorePageFromURL();
 }
 
+function updateNavbar() {
+    const name = localStorage.getItem("userName");
+    const loggedIn = localStorage.getItem("token") && name;
+    signupButton.textContent = loggedIn ? "Hi, " + name : "Sign Up";
+    loginButton.textContent = loggedIn ? "Log out" : "Log In";
+}
+updateNavbar();
