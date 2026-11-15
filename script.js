@@ -817,3 +817,16 @@ function updateNavbar() {
     loginButton.textContent = loggedIn ? "Log out" : "Log In";
 }
 updateNavbar();
+
+//show the city from database
+async function loadCities() {
+    try {
+        const stations = await api("/stations");
+        const cities = [...new Set(stations.map(s => s.city))];
+        document.getElementById("city-suggestions").innerHTML =
+            cities.map(c => `<option value="${c}">`).join("");
+    } catch (err) {
+        console.error("Could not load cities:", err.message);
+    }
+}
+loadCities();

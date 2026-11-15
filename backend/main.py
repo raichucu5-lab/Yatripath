@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import bcrypt
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from database import Base, engine, get_db, User
+from database import Base, engine, get_db, User, Station
 
 
 app=FastAPI()
@@ -58,3 +58,8 @@ def login(data: LoginIn, db: Session = Depends(get_db)):
     if not user or not bcrypt.checkpw(data.password.encode(), user.password_hash.encode()):
         raise HTTPException(status_code=401, detail="Wrong email or password")
     return {"access_token": "dev-token", "name": user.full_name, "role": user.role}
+
+@app.get("/stations")
+def list_stations(db: Session = Depends(get_db)):
+    rows = db.query(Station).order_by(Station.city).all()
+    return [{"id": s.id, "name": s.name, "city": s.city, "type": s.type} for s in rows]

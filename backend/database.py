@@ -20,6 +20,15 @@ class User(Base):
     phone: Mapped[str | None] = mapped_column(String(30))
     role: Mapped[str] = mapped_column(String(20), default="traveller")
 
+
+class Station(Base):
+    __tablename__ = "stations"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True)
+    city: Mapped[str] = mapped_column(String(100))
+    type: Mapped[str] = mapped_column(String(20))
+
+
 def get_db():
     db = SessionLocal()
     try:
