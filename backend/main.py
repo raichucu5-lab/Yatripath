@@ -2,9 +2,14 @@ from fastapi import FastAPI
 from fastapi .middleware.cors import CORSMiddleware
 from pydantic import BaseModel 
 from fastapi import HTTPException
+import bcrypt
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from database import Base, engine, get_db, User
 
 
 app=FastAPI()
+Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
@@ -26,7 +31,6 @@ class LoginIn(BaseModel):
     email:str
     password:str
 
-users = {} 
 class RegisterIn(BaseModel):
      full_name:str
      email:str
@@ -36,15 +40,21 @@ class RegisterIn(BaseModel):
 
 
 @app.post("/auth/register", status_code=201)
-def register(data: RegisterIn):
-    if data.email in users:
+def register(data: RegisterIn, db: Session = Depends(get_db)):
+    if len(data.password) < 8:
+        raise HTTPException(status_code=422, detail="Password must be at least 8 characters")
+    if db.query(User).filter_by(email=data.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
-    users[data.email] = data
+    hashed = bcrypt.hashpw(data.password.encode(), bcrypt.gensalt()).decode()
+    db.add(User(full_name=data.full_name, email=data.email, password_hash=hashed,
+                date_of_birth=data.date_of_birth, phone=data.phone))
+    db.commit()
     return {"ok": True}
 
+
 @app.post("/auth/login")
-def login(data: LoginIn):
-    user = users.get(data.email)
-    if not user or user.password != data.password:
+def login(data: LoginIn, db: Session = Depends(get_db)):
+    user = db.query(User).filter_by(email=data.email).first()
+    if not user or not bcrypt.checkpw(data.password.encode(), user.password_hash.encode()):
         raise HTTPException(status_code=401, detail="Wrong email or password")
-    return {"access_token": "dev-token", "name": user.full_name, "role": "traveller"}
+    return {"access_token": "dev-token", "name": user.full_name, "role": user.role}
