@@ -371,13 +371,17 @@ swapButton?.addEventListener("click", () => {
 const journeyForm = document.querySelector("#journey-search");
 
 
-journeyForm?.addEventListener("submit", event => {
+
+journeyForm?.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const origin = originInput.value.trim();
     const destination = destinationInput.value.trim();
     const departureInput = document.querySelector("#departure");
     const departureDate = departureInput.value;
+    const returnDate = document.querySelector("#return-date");
+    const travellers = document.querySelector("#travellers");
+    const travelClass = document.querySelector("#travel-class");
 
     if (!origin) {
         alert("Please enter your starting city.");
@@ -407,9 +411,20 @@ journeyForm?.addEventListener("submit", event => {
         return;
     }
 
-    // Validation passed.
-    // Add your journey-search functionality here.
-    console.log("Journey search validation passed.");
+    // Build the URL with the user's search details.
+    const params = new URLSearchParams({
+        origin: origin,
+        destination: destination,
+        departure: departureDate,
+        returnDate: returnDate?.value || "",
+        travellers: travellers?.value || "1",
+        adults: document.querySelector("#adults")?.value || "1",
+        children: document.querySelector("#children")?.value || "0",
+        infants: document.querySelector("#infants")?.value || "0",
+        travelClass: travelClass?.value || "Economy"
+    });
+
+    window.location.href = `search.html?${params.toString()}`;
 });
 
 
@@ -506,12 +521,19 @@ function setAuthMode(mode) {
 
 loginTab.addEventListener("click", () => setAuthMode("login"));
 signupTab.addEventListener("click", () => setAuthMode("signup"));
-
+//jekhan theke ase sekhane jate fire jai
 backHome.addEventListener("click", (event) => {
     event.preventDefault();
-    hideAuthPage();
-});
 
+    const cameFromSearch =
+        document.referrer.includes("search.html");
+
+    if (cameFromSearch) {
+        window.location.href = "search.html";
+    } else {
+        hideAuthPage();
+    }
+});
 loginButton?.addEventListener("click", (event) => {
     event.preventDefault();
     showAuthPage("login");

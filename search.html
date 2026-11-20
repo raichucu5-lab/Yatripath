@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Journeys | YatriPath</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+
+<body>
+
+    
+<!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER -->
+        <header>
+            <nav class="NAVBAR">
+                <div class="CONTAINER-FOR-LOGO">
+                <!-- Brand -->
+                    <a href="#" class="LOGO" aria-label="Yatripath home">
+                        <img src="Images/logo.png" alt="Yatripath">
+                    </a>
+                    <a href="#" class="LOGO">Yatripath</a>
+                </div>
+
+    <button
+        type="button"
+        class="MOBILE-MENU-TOGGLE"
+        id="mobile-menu-toggle"
+        aria-label="Open navigation menu"
+        aria-controls="nav-menu"
+        aria-expanded="false">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+
+     <div class="NAV-MENU" id="nav-menu">
+
+        <!-- Navigation links -->
+    <ul class="NAV-LINKS">
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-suitcase-rolling"></i>
+                My Trips
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-ticket"></i>
+                Track Ticket
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-regular fa-bookmark"></i>
+                Saved Routes
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="fa-regular fa-circle-question"></i>
+                Need Help?
+            </a>
+        </li>
+    </ul>
+
+    <!-- Right-side actions -->
+    <div class="NAV-ACTIONS">
+
+        <button class="THEME-BTN" id="theme-toggle"
+                type="button" aria-label="Switch to dark theme">
+            <i class="fa-regular fa-moon"></i>
+        </button>
+
+        <a href="index.html#signup" class="SIGNUP-BTN">Sign Up</a>
+
+        <a href="index.html#login" class="LOGIN-BTN">Log In</a>
+
+    </div>
+
+    </div>
+            </nav>
+        </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="RESULTS-PAGE">
+
+        <!-- SEARCH SUMMARY -->
+        <section class="RESULTS-INTRO">
+
+            <a href="index.html" class="BACK-LINK">
+                ← Back to search
+            </a>
+
+            <p class="RESULTS-TAGLINE">
+                YOUR JOURNEY STARTS HERE
+            </p>
+
+            <h1>Find your <span>best route.</span></h1>
+
+            <p class="RESULTS-DESCRIPTION">
+                Compare travel options and choose the journey
+                that works best for you.
+            </p>
+
+        </section>
+
+        <!-- JOURNEY DETAILS -->
+        <section class="JOURNEY-SUMMARY" aria-label="Your search">
+
+            <div class="SUMMARY-ITEM">
+                <span>FROM</span>
+                <strong id="result-origin">—</strong>
+            </div>
+
+            <div class="SUMMARY-ARROW" aria-hidden="true">→</div>
+
+            <div class="SUMMARY-ITEM">
+                <span>TO</span>
+                <strong id="result-destination">—</strong>
+            </div>
+
+            <div class="SUMMARY-ITEM">
+                <span>DEPARTURE</span>
+                <strong id="result-date">—</strong>
+            </div>
+
+            <div class="SUMMARY-ITEM">
+                <span>TRAVELLERS</span>
+                <strong id="result-travellers">1 passenger</strong>
+            </div>
+
+            <button
+                type="button"
+                class="EDIT-SEARCH-BTN"
+                id="edit-search">
+                Edit search
+            </button>
+
+        </section>
+
+        <!-- FILTERS + RESULTS -->
+        <section class="RESULTS-LAYOUT">
+
+            <aside class="RESULTS-FILTERS">
+
+                <h2>Filter journeys</h2>
+
+                <p class="FILTER-HELP">
+                    Choose the transport modes you want to explore.
+                </p>
+
+                <label class="FILTER-OPTION">
+                    <input type="checkbox" value="flight" checked>
+                    <span>Flights</span>
+                </label>
+
+                <label class="FILTER-OPTION">
+                    <input type="checkbox" value="train" checked>
+                    <span>Trains</span>
+                </label>
+
+                <label class="FILTER-OPTION">
+                    <input type="checkbox" value="bus" checked>
+                    <span>Buses</span>
+                </label>
+
+                <div class="FILTER-DIVIDER"></div>
+
+                <p class="FILTER-NOTE">
+                    Journey availability and prices will be
+                    connected to a transport data source later.
+                </p>
+
+            </aside>
+
+            <div class="RESULTS-CONTENT">
+
+                <div class="RESULTS-HEADING">
+                    <div>
+                        <h2>Available options</h2>
+                        <p id="results-subtitle">
+                            Explore your travel choices.
+                        </p>
+                    </div>
+
+                    <label class="SORT-CONTROL">
+                        <span>Sort by</span>
+                        <select id="sort-results">
+                            <option value="recommended">
+                                Recommended
+                            </option>
+                            <option value="price">
+                                Lowest price
+                            </option>
+                            <option value="duration">
+                                Shortest duration
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- DEMO RESULT 1 -->
+                <article class="JOURNEY-CARD" data-mode="train">
+
+                    <div class="JOURNEY-CARD-TOP">
+                        <span class="MODE-BADGE">TRAIN</span>
+                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                    </div>
+
+                    <div class="JOURNEY-ROUTE">
+                        <div>
+                            <strong>06:30</strong>
+                            <span class="ROUTE-CITY" data-route-origin>
+                                Origin
+                            </span>
+                        </div>
+
+                        <div class="ROUTE-DURATION">
+                            <span>────────</span>
+                            <small>Example duration</small>
+                        </div>
+
+                        <div>
+                            <strong>14:30</strong>
+                            <span class="ROUTE-CITY" data-route-destination>
+                                Destination
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="JOURNEY-CARD-BOTTOM">
+                        <p class="JOURNEY-DISCLOSURE">
+                            Illustrative journey — not live availability.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="BOOK-BTN"
+                            data-book-mode="train">
+                            Continue to book
+                        </button>
+                    </div>
+
+                </article>
+
+                <!-- DEMO RESULT 2 -->
+                <article class="JOURNEY-CARD" data-mode="bus">
+
+                    <div class="JOURNEY-CARD-TOP">
+                        <span class="MODE-BADGE">BUS</span>
+                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                    </div>
+
+                    <div class="JOURNEY-ROUTE">
+                        <div>
+                            <strong>08:00</strong>
+                            <span class="ROUTE-CITY" data-route-origin>
+                                Origin
+                            </span>
+                        </div>
+
+                        <div class="ROUTE-DURATION">
+                            <span>────────</span>
+                            <small>Example duration</small>
+                        </div>
+
+                        <div>
+                            <strong>16:00</strong>
+                            <span class="ROUTE-CITY" data-route-destination>
+                                Destination
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="JOURNEY-CARD-BOTTOM">
+                        <p class="JOURNEY-DISCLOSURE">
+                            Illustrative journey — not live availability.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="BOOK-BTN"
+                            data-book-mode="bus">
+                            Continue to book
+                        </button>
+                    </div>
+
+                </article>
+
+                <!-- DEMO RESULT 3 -->
+                <article class="JOURNEY-CARD" data-mode="flight">
+
+                    <div class="JOURNEY-CARD-TOP">
+                        <span class="MODE-BADGE">FLIGHT</span>
+                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                    </div>
+
+                    <div class="JOURNEY-ROUTE">
+                        <div>
+                            <strong>10:00</strong>
+                            <span class="ROUTE-CITY" data-route-origin>
+                                Origin
+                            </span>
+                        </div>
+
+                        <div class="ROUTE-DURATION">
+                            <span>────────</span>
+                            <small>Example duration</small>
+                        </div>
+
+                        <div>
+                            <strong>12:30</strong>
+                            <span class="ROUTE-CITY" data-route-destination>
+                                Destination
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="JOURNEY-CARD-BOTTOM">
+                        <p class="JOURNEY-DISCLOSURE">
+                            Illustrative journey — not live availability.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="BOOK-BTN"
+                            data-book-mode="flight">
+                            Continue to book
+                        </button>
+                    </div>
+
+                </article>
+
+                <p class="RESULTS-FOOTNOTE">
+                    These are sample cards for frontend development.
+                    They do not represent actual services, schedules,
+                    fares, or bookable tickets.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+         
+<footer class="SITE-FOOTER">
+    <div class="FOOTER-MAIN">
+
+        <!-- Brand -->
+        <div class="FOOTER-BRAND">
+            <a href="index.html" class="FOOTER-LOGO">
+                <!-- Use the same logo image path as your navbar -->
+                <img src="images/logo.png" alt="YatriPath logo">
+                <span>Yatri<span class="FOOTER-LOGO-ACCENT">Path</span></span>
+            </a>
+
+            <p>
+                One place to search, compare and manage bus,
+                train and flight journeys.
+            </p>
+        </div>
+
+        <!-- Explore -->
+        <div class="FOOTER-COLUMN">
+            <h3>EXPLORE</h3>
+            <a href="search.html">Search Trips</a>
+            <a href="#" id="footer-bookings">My Bookings</a>
+            <a href="#" id="footer-profile">Profile</a>
+        </div>
+
+        <!-- Help -->
+        <div class="FOOTER-COLUMN">
+            <h3>HELP</h3>
+            <a href="#">Customer Support</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <!-- Legal -->
+        <div class="FOOTER-COLUMN">
+            <h3>LEGAL</h3>
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="#">About Us</a>
+        </div>
+
+    </div>
+
+    <div class="FOOTER-BOTTOM">
+        <p>© 2026 YatriPath. All rights reserved.</p>
+    </div>
+</footer>
+
+
+        <script src="search.js"></script>
+    </body>
+</html>
