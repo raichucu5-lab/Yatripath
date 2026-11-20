@@ -108,19 +108,71 @@ select:focus-visible {
         var(--tertiary-color);
     box-shadow: var(--search-shadow);
 }
+.RESULTS-INTRO {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
 
-.RESULTS-INTRO::after {
-    content: "✈";
-    position: absolute;
-    z-index: -1;
-    top: 6px;
-    right: 7%;
-    color: var(--search-accent);
-    opacity: 0.07;
-    font-size: clamp(110px, 18vw, 230px);
-    line-height: 1;
-    transform: rotate(-18deg);
-    pointer-events: none;
+    min-height: 385px;
+    padding: 64px 60px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(1, 1, 30, 0.805) 25%,
+            rgba(1, 6, 33, 0.558) 50%,
+            rgba(4, 4, 137, 0) 100%
+        ),
+        linear-gradient(
+            55deg,
+            rgba(0, 0, 0, 0.586) 30%,
+            rgba(0, 255, 204, 0) 50%
+        ),
+        url("https://static.vecteezy.com/system/resources/thumbnails/037/248/582/small_2x/ai-generated-travelling-to-thailand-advertisment-background-with-copy-space-free-photo.jpg") center / cover no-repeat;
+
+    color: #ffffff;
+}
+
+.RESULTS-INTRO .BACK-LINK {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.RESULTS-INTRO .RESULTS-TAGLINE {
+    color: #ffd43b;
+}
+
+.RESULTS-INTRO h1 {
+    color: #ffffff;
+}
+
+.RESULTS-INTRO h1 span {
+    background: linear-gradient(90deg, #4385ff, #03f0c1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.RESULTS-INTRO .RESULTS-DESCRIPTION {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+
+
+@media (max-width: 768px) {
+    .RESULTS-INTRO {
+        min-height: 340px;
+        padding: 36px 26px;
+        border-radius: 22px;
+        background-position: center;
+    }
 }
 
 .BACK-LINK {
@@ -326,22 +378,6 @@ select:focus-visible {
     cursor: pointer;
 }
 
-.FILTER-DIVIDER {
-    height: 1px;
-    margin: 22px 0;
-    background: var(--search-border);
-}
-
-.FILTER-NOTE {
-    margin-bottom: 0;
-    padding: 13px;
-    border-radius: 12px;
-    background: rgba(50, 115, 255, 0.065);
-    color: var(--text-color);
-    font-size: 0.77rem;
-    line-height: 1.75;
-    opacity: 0.8;
-}
 
 /* ---------- RESULTS HEADING ---------- */
 
@@ -521,6 +557,14 @@ select:focus-visible {
     border-top: 1px solid var(--search-border);
 }
 
+.JOURNEY-CARD-BOTTOM > p {
+    margin-bottom: 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    opacity: 0.68;
+    color: var(--search-gold);
+}
+
 .JOURNEY-DISCLOSURE {
     margin-bottom: 0;
     font-size: 0.76rem;
@@ -563,16 +607,6 @@ select:focus-visible {
     transform: translateY(0);
 }
 
-.RESULTS-FOOTNOTE {
-    margin: 25px 0 0;
-    padding: 16px 18px;
-    border: 1px dashed var(--search-border);
-    border-radius: 13px;
-    font-size: 0.78rem;
-    line-height: 1.8;
-    opacity: 0.68;
-}
-
 /* ---------- FOOTER ---------- */
 
 .SITE-FOOTER {
@@ -593,18 +627,6 @@ select:focus-visible {
 
 [data-theme="dark"] .RESULTS-INTRO {
     border-color: rgba(255, 255, 255, 0.10);
-    background:
-        radial-gradient(
-            circle at 88% 18%,
-            rgba(3, 240, 193, 0.10),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 100% 100%,
-            rgba(50, 115, 255, 0.12),
-            transparent 38%
-        ),
-        var(--tertiary-color);
 }
 
 [data-theme="dark"] .JOURNEY-SUMMARY,
