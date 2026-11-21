@@ -947,7 +947,6 @@ if (document.readyState === "loading") {
     restorePageFromURL();
 }
 
-<<<<<<< HEAD
 function updateNavbar() {
     const name = localStorage.getItem("userName");
     const loggedIn = localStorage.getItem("token") && name;
@@ -968,5 +967,3 @@ async function loadCities() {
     }
 }
 loadCities();
-=======
->>>>>>> 47b0c6b8366a128bd41f777eda9bda87c6fcc7e4
