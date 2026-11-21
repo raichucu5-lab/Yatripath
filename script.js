@@ -375,6 +375,7 @@ const journeyForm = document.querySelector("#journey-search");
 journeyForm?.addEventListener("submit", (event) => {
     event.preventDefault();
 
+    
     const origin = originInput.value.trim();
     const destination = destinationInput.value.trim();
     const departureInput = document.querySelector("#departure");
@@ -411,9 +412,12 @@ journeyForm?.addEventListener("submit", (event) => {
         return;
     }
 
+    const selectedTransport =
+    document.querySelector('input[name="transport"]:checked')?.value || "all";
     // Build the URL with the user's search details.
     const params = new URLSearchParams({
         origin: origin,
+        transport: selectedTransport,
         destination: destination,
         departure: departureDate,
         returnDate: returnDate?.value || "",

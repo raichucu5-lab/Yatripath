@@ -2,10 +2,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
 
-    // -----------------------------------------
-    // 1. DISPLAY THE SEARCHED JOURNEY
-    // -----------------------------------------
-
     const getParam = (key, fallback = "") =>
         params.get(key)?.trim() || fallback;
 
@@ -20,26 +16,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const infants = Number(getParam("infants", "0")) || 0;
 
     const travellerCount =
-        Number(getParam("travellers", String(adults + children + infants))) ||
-        adults + children + infants;
+        Number(getParam(
+            "travellers",
+            String(adults + children + infants)
+        )) || adults + children + infants;
 
-    function formatDate(dateString) {
-        if (!dateString) return "Date not selected";
+    function setText(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    }
 
-        const date = new Date(`${dateString}T00:00:00`);
+    function formatDate(value) {
+        if (!value) return "Date not selected";
 
-        if (Number.isNaN(date.getTime())) return dateString;
+        const date = new Date(`${value}T00:00:00`);
+        if (Number.isNaN(date.getTime())) return value;
 
         return date.toLocaleDateString("en-IN", {
             day: "numeric",
             month: "short",
             year: "numeric"
         });
-    }
-
-    function setText(id, value) {
-        const element = document.getElementById(id);
-        if (element) element.textContent = value;
     }
 
     setText("result-origin", origin);
@@ -50,50 +47,218 @@ document.addEventListener("DOMContentLoaded", () => {
         `${travellerCount} traveller${travellerCount === 1 ? "" : "s"}`
     );
 
-    // -----------------------------------------
-    // 2. FILTER DEMO RESULTS BY TRANSPORT TYPE
-    // -----------------------------------------
+    // Show the searched cities on each result card.
+    document.querySelectorAll("[data-route-origin]")
+        .forEach(element => element.textContent = origin);
 
-    const resultCards = document.querySelectorAll("article[data-mode]");
+    document.querySelectorAll("[data-route-destination]")
+        .forEach(element => element.textContent = destination);
 
-    function applyTransportFilter(mode) {
-        resultCards.forEach(card => {
-            const cardMode = card.dataset.mode.toLowerCase();
-            card.hidden = mode !== "all" && cardMode !== mode;
-        });
-    }
+    // --------------------------------------------------
+    // TRANSPORT FILTERS
+    // --------------------------------------------------
 
-    // Supports buttons with data-filter-mode="train",
-    // or inputs with name="transport-filter".
-    const filterControls = document.querySelectorAll(
-        "[data-filter-mode], [name='transport-filter']"
+    const cards = [...document.querySelectorAll(".JOURNEY-CARD[data-mode]")];
+
+    const filterInputs = [
+        ...document.querySelectorAll(
+            "input[name='transport-filter'][data-filter-mode]"
+        )
+    ];
+
+    const allFilter = filterInputs.find(
+        input => input.dataset.filterMode === "all"
     );
 
-    filterControls.forEach(control => {
-        const controlMode = (
-            control.dataset.filterMode || control.value || "all"
-        ).toLowerCase();
+    function applyFilters() {
+        const allSelected = allFilter?.checked;
 
-        if (control.type === "radio" || control.type === "checkbox") {
-            control.addEventListener("change", () => {
-                if (control.checked) applyTransportFilter(controlMode);
-            });
-        } else {
-            control.addEventListener("click", () => {
-                applyTransportFilter(controlMode);
-            });
-        }
+        const selectedModes = new Set(
+            filterInputs
+                .filter(input =>
+                    input !== allFilter && input.checked
+                )
+                .map(input => input.dataset.filterMode)
+        );
+
+        cards.forEach(card => {
+            card.hidden = !allSelected &&
+                !selectedModes.has(card.dataset.mode.toLowerCase());
+        });
+
+        const visibleCount = cards.filter(card => !card.hidden).length;
+
+        setText(
+            "results-subtitle",
+            visibleCount
+                ? `${visibleCount} demo option${visibleCount === 1 ? "" : "s"} shown.`
+                : "No options match the selected transport filters."
+        );
+    }
+
+    function selectTransport(mode) {
+        filterInputs.forEach(input => {
+            input.checked = mode === "all"
+                ? true
+                : input.dataset.filterMode === mode;
+        });
+
+        applyFilters();
+    }
+
+    filterInputs.forEach(input => {
+        input.addEventListener("change", () => {
+            if (input === allFilter) {
+                // Multi-Mode is an all-modes shortcut.
+                filterInputs.forEach(other => {
+                    other.checked = input.checked;
+                });
+            } else if (input.checked) {
+                // Selecting a specific mode clears Multi-Mode.
+                if (allFilter) allFilter.checked = false;
+            } else if (allFilter) {
+                allFilter.checked = false;
+            }
+
+            applyFilters();
+        });
     });
 
-    applyTransportFilter(
+    selectTransport(
         ["all", "flight", "train", "bus"].includes(transport)
             ? transport
             : "all"
     );
 
-    // -----------------------------------------
-    // 3. KEEP THE LIGHT/DARK THEME CONSISTENT
-    // -----------------------------------------
+    // --------------------------------------------------
+    // FAVOURITE ROUTES — SAVED IN THIS BROWSER
+    // --------------------------------------------------
+
+    const FAVOURITES_KEY = "yatripath-favourite-routes";
+
+    function readFavourites() {
+        try {
+            const stored = JSON.parse(
+                localStorage.getItem(FAVOURITES_KEY) || "[]"
+            );
+
+            return Array.isArray(stored) ? stored : [];
+        } catch {
+            return [];
+        }
+    }
+
+    let favourites = readFavourites();
+
+    function routeKey(card) {
+        return [
+            origin.toLowerCase(),
+            destination.toLowerCase(),
+            departure,
+            card.dataset.mode.toLowerCase()
+        ].join("|");
+    }
+
+    function updateFavouriteButton(button, saved) {
+        const icon = button.querySelector("i");
+
+        button.setAttribute("aria-pressed", String(saved));
+        button.setAttribute(
+            "aria-label",
+            saved ? "Remove from favourites" : "Mark as favourite"
+        );
+        button.title = saved
+            ? "Remove from favourites"
+            : "Mark as favourite";
+
+        if (icon) {
+            icon.classList.toggle("fa-solid", saved);
+            icon.classList.toggle("fa-regular", !saved);
+            icon.classList.toggle("fa-heart", true);
+        }
+    }
+
+    document.querySelectorAll(".FAVOURITE-BTN").forEach(button => {
+        const card = button.closest(".JOURNEY-CARD[data-mode]");
+        if (!card) return;
+
+        updateFavouriteButton(
+            button,
+            favourites.includes(routeKey(card))
+        );
+
+        button.addEventListener("click", () => {
+            const key = routeKey(card);
+            const alreadySaved = favourites.includes(key);
+
+            favourites = alreadySaved
+                ? favourites.filter(item => item !== key)
+                : [...favourites, key];
+
+            try {
+                localStorage.setItem(
+                    FAVOURITES_KEY,
+                    JSON.stringify(favourites)
+                );
+            } catch {
+                alert("Your browser could not save this favourite.");
+                return;
+            }
+
+            updateFavouriteButton(button, !alreadySaved);
+        });
+    });
+
+    // --------------------------------------------------
+    // TRAIN CLASS SELECTION
+    // --------------------------------------------------
+
+    document.querySelectorAll(".JOURNEY-CARD[data-mode='train']")
+        .forEach(card => {
+            const options = [
+                ...card.querySelectorAll(".TRAIN-CLASS-OPTION")
+            ];
+
+            const details = card.querySelector(".TRAIN-SELECTED-DETAILS");
+
+            function selectTrainClass(button) {
+                options.forEach(option => {
+                    const selected = option === button;
+
+                    option.classList.toggle("is-selected", selected);
+                    option.setAttribute("aria-pressed", String(selected));
+                });
+
+                card.dataset.option = button.dataset.class;
+                card.dataset.fare = button.dataset.fare;
+                card.dataset.seats = button.dataset.seats;
+
+                if (details) {
+                    details.textContent =
+                        `Selected: ${button.dataset.class} · ` +
+                        `₹${Number(button.dataset.fare).toLocaleString("en-IN")} · ` +
+                        `${button.dataset.seats} demo seats`;
+                }
+            }
+
+            options.forEach(button => {
+                button.addEventListener("click", () => {
+                    selectTrainClass(button);
+                });
+            });
+
+            const initiallySelected =
+                options.find(option => option.classList.contains("is-selected")) ||
+                options[0];
+
+            if (initiallySelected) {
+                selectTrainClass(initiallySelected);
+            }
+        });
+
+    // --------------------------------------------------
+    // LIGHT / DARK THEME
+    // --------------------------------------------------
 
     const themeToggle = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("travelleon-theme");
@@ -105,56 +270,52 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateThemeButton() {
         if (!themeToggle) return;
 
-        const isDark =
+        const dark =
             document.documentElement.dataset.theme === "dark";
 
         themeToggle.setAttribute(
             "aria-label",
-            isDark ? "Switch to light theme" : "Switch to dark theme"
+            dark ? "Switch to light theme" : "Switch to dark theme"
         );
 
         const icon = themeToggle.querySelector("i");
 
         if (icon) {
-            icon.classList.toggle("fa-moon", !isDark);
-            icon.classList.toggle("fa-sun", isDark);
+            icon.classList.toggle("fa-moon", !dark);
+            icon.classList.toggle("fa-sun", dark);
         }
     }
 
     updateThemeButton();
 
     themeToggle?.addEventListener("click", () => {
-        const currentTheme =
+        const current =
             document.documentElement.dataset.theme || "light";
 
-        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        const next = current === "dark" ? "light" : "dark";
 
-        document.documentElement.dataset.theme = nextTheme;
-        localStorage.setItem("travelleon-theme", nextTheme);
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("travelleon-theme", next);
 
         updateThemeButton();
     });
 
-    // -----------------------------------------
-    // 4. RETURN TO EDIT THE SEARCH
-    // -----------------------------------------
+    // --------------------------------------------------
+    // EDIT SEARCH
+    // --------------------------------------------------
 
-    const editSearchButton = document.getElementById("edit-search");
-
-    editSearchButton?.addEventListener("click", () => {
-        const preservedParams = new URLSearchParams(params);
-        window.location.href = `index.html?${preservedParams.toString()}`;
+    document.getElementById("edit-search")?.addEventListener("click", () => {
+        window.location.href =
+            `index.html?${params.toString()}`;
     });
 
-    // -----------------------------------------
-    // 5. SAVE A PENDING BOOKING AND ASK THE USER
-    //    TO LOG IN BEFORE CONTINUING
-    // -----------------------------------------
+    // --------------------------------------------------
+    // BOOKING HANDOFF — DEMO UNTIL BACKEND INTEGRATION
+    // --------------------------------------------------
 
     document.querySelectorAll(".BOOK-BTN").forEach(button => {
         button.addEventListener("click", () => {
-            const card = button.closest("article[data-mode]");
-
+            const card = button.closest(".JOURNEY-CARD[data-mode]");
             if (!card) return;
 
             const pendingBooking = {
@@ -165,6 +326,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 transport: card.dataset.mode,
                 travellers: travellerCount,
                 selectedDemoOption: card.dataset.option || null,
+                demoFare: card.dataset.fare
+                    ? Number(card.dataset.fare)
+                    : null,
+                demoSeats: card.dataset.seats
+                    ? Number(card.dataset.seats)
+                    : null,
                 returnTo: window.location.pathname + window.location.search
             };
 
@@ -173,20 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 JSON.stringify(pendingBooking)
             );
 
-            // Existing homepage authentication view.
             window.location.href = "index.html#login";
         });
     });
-
-    // -----------------------------------------
-    // 6. BACKEND INTEGRATION PLACEHOLDER
-    // -----------------------------------------
-    //
-    // Demo cards remain in the HTML for now.
-    // Once your friend confirms the search API,
-    // we will fetch real results here and render
-    // them into the existing results section.
-    //
-    // We are deliberately NOT guessing the API URL.
-
 });

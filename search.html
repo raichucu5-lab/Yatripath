@@ -112,24 +112,24 @@
         <!-- JOURNEY DETAILS -->
         <section class="JOURNEY-SUMMARY" aria-label="Your search">
 
-            <div class="SUMMARY-ITEM">
+            <div class="SUMMARY-ITEM SUMMARY-FROM">
                 <span>FROM</span>
                 <strong id="result-origin">—</strong>
             </div>
 
             <div class="SUMMARY-ARROW" aria-hidden="true">→</div>
 
-            <div class="SUMMARY-ITEM">
+            <div class="SUMMARY-ITEM SUMMARY-TO">
                 <span>TO</span>
                 <strong id="result-destination">—</strong>
             </div>
 
-            <div class="SUMMARY-ITEM">
+            <div class="SUMMARY-ITEM SUMMARY-DATE">
                 <span>DEPARTURE</span>
                 <strong id="result-date">—</strong>
             </div>
 
-            <div class="SUMMARY-ITEM">
+            <div class="SUMMARY-ITEM SUMMARY-TRAVELLERS">
                 <span>TRAVELLERS</span>
                 <strong id="result-travellers">1 passenger</strong>
             </div>
@@ -155,23 +155,27 @@
                 </p>
 
                 <label class="FILTER-OPTION">
-                    <input type="checkbox" value="flight" checked>
+                    <input type="checkbox" name="transport-filter"
+                        data-filter-mode="flight" value="flight">
                     <span>Flights</span>
                 </label>
 
                 <label class="FILTER-OPTION">
-                    <input type="checkbox" value="train" checked>
-                    <span>Trains</span>
+                    <input type="checkbox" name="transport-filter"
+                        data-filter-mode="train" value="train">
+                <span>Trains</span>
                 </label>
 
                 <label class="FILTER-OPTION">
-                    <input type="checkbox" value="bus" checked>
+                    <input type="checkbox" name="transport-filter"
+                        data-filter-mode="bus" value="bus">
                     <span>Buses</span>
                 </label>
 
                 <label class="FILTER-OPTION">
-                    <input type="checkbox" value="all" checked>
-                    <span>All</span>
+                    <input type="checkbox" name="transport-filter"
+                        data-filter-mode="all" value="all">
+                    <span>Multi-Mode</span>
                 </label>
 
 
@@ -191,7 +195,7 @@
                         <span>Sort by</span>
                         <select id="sort-results">
                             <option value="recommended">
-                                Recommended
+                                Departure time
                             </option>
                             <option value="price">
                                 Lowest price
@@ -208,7 +212,14 @@
 
                     <div class="JOURNEY-CARD-TOP">
                         <span class="MODE-BADGE">TRAIN</span>
-                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                        <button
+                            type="button"
+                            class="FAVOURITE-BTN"
+                            aria-label="Mark as favourite"
+                            aria-pressed="false"
+                            title="Mark as favourite">
+                            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        </button>
                     </div>
 
                     <div class="JOURNEY-ROUTE">
@@ -232,6 +243,70 @@
                         </div>
                     </div>
 
+                    <div class="TRAIN-CLASS-SECTION">
+
+    <div class="TRAIN-CLASS-GRID">
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="SL" data-fare="420" data-seats="35"
+                aria-pressed="false">
+            <strong>SL</strong>
+            <span>₹420</span>
+            <small>35 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="2S" data-fare="180" data-seats="42"
+                aria-pressed="false">
+            <strong>2S</strong>
+            <span>₹180</span>
+            <small>42 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION is-selected"
+                data-class="CC" data-fare="650" data-seats="24"
+                aria-pressed="true">
+            <strong>CC</strong>
+            <span>₹650</span>
+            <small>24 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="3E" data-fare="950" data-seats="30"
+                aria-pressed="false">
+            <strong>3E</strong>
+            <span>₹950</span>
+            <small>30 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="3A" data-fare="1100" data-seats="18"
+                aria-pressed="false">
+            <strong>3A</strong>
+            <span>₹1,100</span>
+            <small>18 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="2A" data-fare="1550" data-seats="12"
+                aria-pressed="false">
+            <strong>2A</strong>
+            <span>₹1,550</span>
+            <small>12 seats</small>
+        </button>
+
+        <button type="button" class="TRAIN-CLASS-OPTION"
+                data-class="1A" data-fare="2600" data-seats="6"
+                aria-pressed="false">
+            <strong>1A</strong>
+            <span>₹2,600</span>
+            <small>6 seats</small>
+        </button>
+
+    </div>
+
+</div>
+
                     <div class="JOURNEY-CARD-BOTTOM">
                         <p class="JOURNEY-DISCLOSURE">
                             live availability.
@@ -252,7 +327,14 @@
 
                     <div class="JOURNEY-CARD-TOP">
                         <span class="MODE-BADGE">BUS</span>
-                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                        <button
+                            type="button"
+                            class="FAVOURITE-BTN"
+                            aria-label="Mark as favourite"
+                            aria-pressed="false"
+                            title="Mark as favourite">
+                            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        </button>
                     </div>
 
                     <div class="JOURNEY-ROUTE">
@@ -296,7 +378,14 @@
 
                     <div class="JOURNEY-CARD-TOP">
                         <span class="MODE-BADGE">FLIGHT</span>
-                        <span class="DEMO-BADGE">DEMO OPTION</span>
+                        <button
+                            type="button"
+                            class="FAVOURITE-BTN"
+                            aria-label="Mark as favourite"
+                            aria-pressed="false"
+                            title="Mark as favourite">
+                            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        </button>
                     </div>
 
                     <div class="JOURNEY-ROUTE">

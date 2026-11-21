@@ -235,26 +235,65 @@ select:focus-visible {
     display: grid;
     grid-template-columns:
         minmax(0, 1fr)
-        auto
+        35px
         minmax(0, 1fr)
-        minmax(130px, 0.8fr)
-        minmax(125px, 0.75fr)
+        minmax(110px, 0.8fr)
+        minmax(110px, 0.8fr)
         auto;
+
+    grid-template-areas: "origin arrow destination date travellers edit";
     align-items: center;
-    gap: 22px;
+    gap: 18px;
+
     margin-bottom: 35px;
     padding: 24px 26px;
+
     border: 1px solid var(--search-border);
     border-radius: var(--search-radius);
     background: var(--tertiary-color);
     box-shadow: var(--search-shadow);
 }
 
+.SUMMARY-FROM {
+    grid-area: origin;
+}
+
+.SUMMARY-ARROW {
+    display: grid;
+    width: 35px;
+    height: 35px;
+    place-items: center;
+    justify-self: center;
+
+    border: 1px solid var(--search-teal);
+    border-radius: 50%;
+    background: rgba(15, 179, 149, 0.156);
+    color: var(--search-teal);
+    font-weight: 1000;
+}
+
+.SUMMARY-TO {
+    grid-area: destination;
+}
+
+.SUMMARY-DATE {
+    grid-area: date;
+}
+
+.SUMMARY-TRAVELLERS {
+    grid-area: travellers;
+}
+
+.EDIT-SEARCH-BTN {
+    grid-area: edit;
+    justify-self: end;
+}
+
 .SUMMARY-ITEM {
     display: flex;
     min-width: 0;
     flex-direction: column;
-    gap: 9px;
+    gap: 7px;
 }
 
 .SUMMARY-ITEM > span {
@@ -292,6 +331,7 @@ select:focus-visible {
     background: rgba(15, 179, 149, 0.156);
     color: var(--search-teal);
     font-weight: 1000;
+    justify-self: left;
 }
 
 .EDIT-SEARCH-BTN {
@@ -465,8 +505,7 @@ select:focus-visible {
     margin-bottom: 26px;
 }
 
-.MODE-BADGE,
-.DEMO-BADGE {
+.MODE-BADGE{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -481,13 +520,6 @@ select:focus-visible {
 .MODE-BADGE {
     background: rgba(50, 115, 255, 0.10);
     color: var(--search-accent);
-}
-
-.DEMO-BADGE {
-    border: 1px solid rgba(235, 193, 25, 0.38);
-    background: rgba(235, 193, 25, 0.10);
-    color: #987500;
-    letter-spacing: 0.04em;
 }
 
 .JOURNEY-ROUTE {
@@ -644,12 +676,6 @@ select:focus-visible {
     background: rgba(50, 115, 255, 0.12);
 }
 
-[data-theme="dark"] .DEMO-BADGE {
-    color: #f1d86c;
-    border-color: rgba(235, 193, 25, 0.28);
-    background: rgba(235, 193, 25, 0.08);
-}
-
 [data-theme="dark"] .MODE-BADGE {
     background: rgba(50, 115, 255, 0.16);
 }
@@ -671,14 +697,29 @@ select:focus-visible {
     }
 
     .JOURNEY-SUMMARY {
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 20px;
-    }
+    grid-template-columns: minmax(0, 1fr) 35px minmax(0, 1fr);
+    grid-template-areas:
+        "origin arrow destination"
+        "date travellers edit";
+    gap: 18px 14px;
+}
+
 
     .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(3),
     .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(4) {
         padding-top: 15px;
         border-top: 1px solid var(--search-border);
+    }
+
+    .SUMMARY-DATE,
+    .SUMMARY-TRAVELLERS {
+        padding-top: 15px;
+        border-top: 1px solid var(--search-border);
+    }
+
+    .EDIT-SEARCH-BTN {
+        justify-self: end;
+        align-self: end;
     }
 
     .EDIT-SEARCH-BTN {
@@ -733,13 +774,32 @@ select:focus-visible {
     }
 
     .JOURNEY-SUMMARY {
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 17px 12px;
-        margin-bottom: 25px;
-        padding: 20px 16px;
-        border-radius: 17px;
+    grid-template-columns: minmax(0, 1fr) 29px minmax(0, 1fr);
+    grid-template-areas:
+        "origin arrow destination"
+        "date travellers travellers"
+        "edit edit edit";
+    gap: 16px 10px;
+    margin-bottom: 25px;
+    padding: 20px 16px;
+    border-radius: 17px;
+}
+
+    .SUMMARY-DATE,
+    .SUMMARY-TRAVELLERS {
+        padding-top: 15px;
+        border-top: 1px solid var(--search-border);
     }
 
+    .SUMMARY-ARROW {
+        width: 29px;
+        height: 29px;
+}
+
+    .EDIT-SEARCH-BTN {
+        grid-column: auto;
+        width: 100%;
+}
     .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(3),
     .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(4) {
         padding-top: 15px;
@@ -752,16 +812,6 @@ select:focus-visible {
 
     .SUMMARY-ITEM strong {
         font-size: 0.88rem;
-    }
-
-    .SUMMARY-ARROW {
-        width: 29px;
-        height: 29px;
-    }
-
-    .EDIT-SEARCH-BTN {
-        grid-column: 1 / -1;
-        width: 100%;
     }
 
     .RESULTS-LAYOUT {
@@ -896,5 +946,146 @@ select:focus-visible {
     *::after {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
+    }
+}
+
+/* FAVOURITE ROUTE BUTTON */
+
+.JOURNEY-CARD-TOP {
+    position: relative;
+}
+
+.FAVOURITE-BTN {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin-left: auto;
+    border: none;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.FAVOURITE-BTN:hover {
+    color: #e34d76;
+}
+
+.FAVOURITE-BTN[aria-pressed="true"] {
+    color: #e34d76;
+}
+
+.FAVOURITE-BTN[aria-pressed="true"] i {
+    font-weight: 900;
+}
+
+/* Tooltip ABOVE the favourite icon */
+
+.FAVOURITE-BTN::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 180px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #102746;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.FAVOURITE-BTN:hover::after,
+.FAVOURITE-BTN:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+/* TRAIN CLASS OPTIONS */
+
+.TRAIN-CLASS-SECTION {
+    margin: 8px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--search-border);
+    border-radius: 14px;
+    background: color-mix(
+        in srgb,
+        var(--tertiary-color) 92%,
+        var(--search-accent) 8%
+    );
+}
+
+
+.TRAIN-CLASS-GRID {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.TRAIN-CLASS-OPTION {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 10px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+}
+
+.TRAIN-CLASS-OPTION strong {
+    font-size: 1rem;
+}
+
+.TRAIN-CLASS-OPTION span {
+    font-weight: 800;
+    color: var(--search-accent);
+}
+
+.TRAIN-CLASS-OPTION small {
+    font-size: 0.68rem;
+    opacity: 0.7;
+}
+
+.TRAIN-CLASS-OPTION:hover,
+.TRAIN-CLASS-OPTION.is-selected {
+    border-color: var(--search-accent);
+    box-shadow: 0 0 0 2px rgba(50, 115, 255, 0.10);
+}
+
+.TRAIN-CLASS-OPTION.is-selected {
+    background: rgba(50, 115, 255, 0.08);
+}
+
+.TRAIN-SELECTED-DETAILS {
+    margin: 14px 0 0;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+@media (max-width: 700px) {
+    .TRAIN-CLASS-GRID {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .TRAIN-CLASS-SECTION {
+        padding: 13px;
     }
 }
