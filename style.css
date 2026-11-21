@@ -10,8 +10,8 @@
     --primary-color: #03F0C1;
     --secondary-color: #ebc119;
     --tertiary-color: #ffffff;
-    --background-color: #f3f3f3;
-    --text-color: #010b21d7;
+    --background-color: #F1F6FC;
+    --text-color: #102746;
     --highlight-color: #3273FF;
 }
 
@@ -64,6 +64,11 @@ a {
         box-shadow 0.3s ease;
 }
 
+html:not([data-theme="dark"]) .SEARCH-CARD {
+    border: 1px solid #D8E3F0;
+    box-shadow: 0 0.75rem 2rem rgba(32, 16, 70, 0.105);
+}
+
 /* =========================================
    3. NAVBAR
 ========================================= */
@@ -78,7 +83,7 @@ a {
     padding: 1.25rem 6%;
 
     background-color: var(--tertiary-color);
-    box-shadow: 0 0.25rem 1.25rem rgba(1, 11, 33, 0.08);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.071));
 }
 
 /* Logo */
@@ -100,10 +105,10 @@ a {
         #3273FF,
         #03F0C1
     );
-    gap: 0;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+    gap: 0;
 }
 
 .LOGO img{
@@ -1475,7 +1480,7 @@ a {
     );
     border-radius: 1.25rem;
 
-    box-shadow: 0 0.5rem 1.5rem rgba(20, 35, 60, 0.05);
+    box-shadow: 0 0.5rem 1.5rem rgba(10, 4, 58, 0.153);
 
     transition:
         transform 0.3s ease,
@@ -2058,33 +2063,142 @@ main[hidden] {
 
 /*FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRR*/
 
+
+/* Footer */
+
 .SITE-FOOTER {
     width: 100%;
     box-sizing: border-box;
-    padding: 1rem 1rem;
-    text-align: center;
-    background-color: var(--tertiary-color);
-    border-top: 1px solid rgba(128, 128, 128, 0.15);
+    padding: 1.5rem 5% 1.5rem;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    box-shadow: 0 0.5rem 1.5rem rgba(10, 4, 58, 0.153);;
 }
 
-.SITE-FOOTER p {
+.FOOTER-MAIN {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding-bottom: 1.5rem;
+}
+
+.FOOTER-BRAND {
+    max-width: 32rem;
+}
+
+.FOOTER-LOGO {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(
+        110deg,
+        #3273FF,
+        #03F0C1
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.FOOTER-LOGO img {
+    display: block;
+    width: 3.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+}
+
+.FOOTER-BRAND p {
+    max-width: 32rem;
     margin: 0;
-    color: #888888;
-    font-size: 0.75rem;
-    line-height: 1.6;
+    color: var(--text-color, #6f6f80ab);
+    font-size: 0.95rem;
+    line-height: 1.8;
 }
 
-.SITE-FOOTER a {
-    color: #888888;
+.FOOTER-COLUMN {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.FOOTER-COLUMN h3 {
+    margin: 0 0 0.35rem;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.FOOTER-COLUMN a {
+    color: var(--text-color, #6f6f80ab);
+    font-size: 0.95rem;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.SITE-FOOTER a:hover {
-    color: var(--primary-color);
+.FOOTER-COLUMN a:hover {
+    color: var(--highlight-color, #3273FF);
 }
 
-.FOOTER-DIVIDER {
-    margin: 0 0.4rem;
-    color: #aaaaaa;
+.FOOTER-BOTTOM {
+    width: 100%;
+    max-width: 1400px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(184, 204, 232);
+    text-align: center;
+}
+
+.FOOTER-BOTTOM p {
+    margin: 0;
+    color: var(--text-color);
+    font-size : 0.8rem;
+    line-height : 1.6;
+}
+
+/* Responsive footer */
+
+/* Responsive footer */
+
+@media (max-width: 800px) {
+    .FOOTER-MAIN {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem 1rem;
+    }
+
+    .FOOTER-BRAND {
+        grid-column: 1 / -1;
+    }
+
+    .FOOTER-COLUMN {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .SITE-FOOTER {
+        padding: 2rem 1rem 1.25rem;
+    }
+
+    .FOOTER-MAIN {
+        gap: 1.75rem 0.5rem;
+    }
+
+    .FOOTER-COLUMN a {
+        font-size: 0.75rem;
+        overflow-wrap: anywhere;
+    }
+
+    .FOOTER-COLUMN h3 {
+        font-size: 0.75rem;
+    }
 }

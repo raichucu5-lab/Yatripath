@@ -160,6 +160,147 @@ travellerTrigger?.addEventListener("click", () => {
 });
 
 
+
+/* =========================================
+   TRANSPORT-SPECIFIC TRAVEL CLASSES
+========================================= */
+
+const transportRadios = [
+    ...document.querySelectorAll('input[name="transport"]')
+];
+
+const classSelect = document.querySelector("#travel-class");
+const classHelp = document.querySelector("#class-help");
+
+const classesByTransport = {
+    flight: [
+        { value: "flight:economy", label: "Economy" },
+        { value: "flight:premium-economy", label: "Premium Economy" },
+        { value: "flight:business", label: "Business" },
+        { value: "flight:first-class", label: "First Class" }
+    ],
+
+    train: [
+        { value: "train:1A", label: "1A — AC First Class" },
+        { value: "train:2A", label: "2A — AC 2 Tier" },
+        { value: "train:3A", label: "3A — AC 3 Tier" },
+        { value: "train:3E", label: "3E — AC 3 Tier Economy" },
+        { value: "train:CC", label: "CC — AC Chair Car" },
+        { value: "train:EC", label: "EC — Executive Chair Car" },
+        { value: "train:SL", label: "SL — Sleeper" },
+        { value: "train:2S", label: "2S — Second Sitting" }
+    ],
+
+    bus: [
+        { value: "bus:seater", label: "Non-AC Seater" },
+        { value: "bus:ac-seater", label: "AC Seater" },
+        { value: "bus:sleeper", label: "Non-AC Sleeper" },
+        { value: "bus:ac-sleeper", label: "AC Sleeper" },
+        { value: "bus:volvo-ac", label: "Volvo AC" },
+        { value: "bus:volvo-ac-sleeper", label: "Volvo AC Sleeper" }
+    ]
+};
+
+function getSelectedTransport() {
+    return document.querySelector(
+        'input[name="transport"]:checked'
+    )?.value || "all";
+}
+
+function updateTravelClassOptions(preferredValue = "all") {
+    if (!classSelect) return;
+
+    const mode = getSelectedTransport();
+
+    let availableClasses;
+
+    if (mode === "all") {
+        availableClasses = Object.values(classesByTransport).flat();
+    } else {
+        availableClasses = classesByTransport[mode] || [];
+    }
+
+    classSelect.replaceChildren();
+
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "All classes";
+    classSelect.appendChild(allOption);
+
+    availableClasses.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.value;
+        option.textContent = mode === "all"
+            ? `${item.label} (${item.value.split(":")[0]})`
+            : item.label;
+
+        classSelect.appendChild(option);
+    });
+
+    const valueExists = [...classSelect.options].some(
+        option => option.value === preferredValue
+    );
+
+    classSelect.value = valueExists ? preferredValue : "all";
+
+    if (classHelp) {
+        classHelp.textContent = mode === "all"
+            ? "Choose All Classes or a specific mode and class."
+            : `Choose a ${mode} class or compare all its classes.`;
+    }
+}
+
+transportRadios.forEach(radio => {
+    radio.addEventListener("change", () => {
+        if (radio.checked) {
+            updateTravelClassOptions("all");
+        }
+    });
+});
+
+// Initialise the class dropdown.
+updateTravelClassOptions();
+/* RESTORE SEARCH DETAILS WHEN EDIT SEARCH IS CLICKED */
+
+const incomingParams = new URLSearchParams(window.location.search);
+
+if (incomingParams.has("transport")) {
+    const incomingTransport = incomingParams.get("transport");
+
+    const matchingRadio = transportRadios.find(
+        radio => radio.value === incomingTransport
+    );
+
+    if (matchingRadio) {
+        matchingRadio.checked = true;
+    }
+}
+
+updateTravelClassOptions(
+    incomingParams.get("travelClass") || "all"
+);
+
+const restoredOrigin = document.querySelector("#origin");
+const restoredDestination = document.querySelector("#destination");
+const restoredDeparture = document.querySelector("#departure");
+const restoredReturn = document.querySelector("#return-date");
+
+if (restoredOrigin && incomingParams.has("origin")) {
+    restoredOrigin.value = incomingParams.get("origin");
+}
+
+if (restoredDestination && incomingParams.has("destination")) {
+    restoredDestination.value = incomingParams.get("destination");
+}
+
+if (restoredDeparture && incomingParams.has("departure")) {
+    restoredDeparture.value = incomingParams.get("departure");
+}
+
+if (restoredReturn && incomingParams.has("returnDate")) {
+    restoredReturn.value = incomingParams.get("returnDate");
+}
+
 /* UPDATE PASSENGER TOTAL */
 
 function updatePassengerTotal() {
@@ -371,13 +512,18 @@ swapButton?.addEventListener("click", () => {
 const journeyForm = document.querySelector("#journey-search");
 
 
-journeyForm?.addEventListener("submit", event => {
+
+journeyForm?.addEventListener("submit", (event) => {
     event.preventDefault();
 
+    
     const origin = originInput.value.trim();
     const destination = destinationInput.value.trim();
     const departureInput = document.querySelector("#departure");
     const departureDate = departureInput.value;
+    const returnDate = document.querySelector("#return-date");
+    const travellers = document.querySelector("#travellers");
+    const travelClass = document.querySelector("#travel-class");
 
     if (!origin) {
         alert("Please enter your starting city.");
@@ -407,9 +553,23 @@ journeyForm?.addEventListener("submit", event => {
         return;
     }
 
-    // Validation passed.
-    // Add your journey-search functionality here.
-    console.log("Journey search validation passed.");
+    const selectedTransport =
+    document.querySelector('input[name="transport"]:checked')?.value || "all";
+    // Build the URL with the user's search details.
+const params = new URLSearchParams({
+    origin: origin,
+    destination: destination,
+    departure: departureDate,
+    returnDate: returnDate?.value || "",
+    travellers: travellers?.value || "1",
+    adults: document.querySelector("#adults")?.value || "1",
+    children: document.querySelector("#children")?.value || "0",
+    infants: document.querySelector("#infants")?.value || "0",
+    transport: getSelectedTransport(),
+    travelClass: travelClass?.value || "all"
+});
+
+window.location.href = `search.html?${params.toString()}`;
 });
 
 
@@ -506,25 +666,27 @@ function setAuthMode(mode) {
 
 loginTab.addEventListener("click", () => setAuthMode("login"));
 signupTab.addEventListener("click", () => setAuthMode("signup"));
-
+//jekhan theke ase sekhane jate fire jai
 backHome.addEventListener("click", (event) => {
     event.preventDefault();
-    hideAuthPage();
-});
 
+    const cameFromSearch =
+        document.referrer.includes("search.html");
+
+    if (cameFromSearch) {
+        window.location.href = "search.html";
+    } else {
+        hideAuthPage();
+    }
+});
 loginButton?.addEventListener("click", (event) => {
     event.preventDefault();
-    if (localStorage.getItem("token")) {
-        localStorage.clear();
-        updateNavbar();
-    } else {
-        showAuthPage("login");
-    }
+    showAuthPage("login");
 });
 
 signupButton?.addEventListener("click", (event) => {
     event.preventDefault();
-    if (!localStorage.getItem("token")) showAuthPage("signup");
+    showAuthPage("signup");
 });
 
 // Eye emoji password visibility toggle.
@@ -652,27 +814,16 @@ document.querySelectorAll("[data-otp]").forEach((button) => {
     });
 });
 
-loginForm.addEventListener("submit", async (event) => {
+// Login UI submission.
+loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    try {
-        const data = await api("/auth/login", {
-            method: "POST",
-            body: {
-                email: document.getElementById("login-email").value.trim(),
-                password: document.getElementById("login-password").value
-            }
-        });
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("userName", data.name);
-        updateNavbar();
-        hideAuthPage();
-    } catch (err) {
-        authMessage.textContent = err.message;
-    }
+
+    authMessage.textContent =
+        "Your login form is ready. Real account authentication still needs to be connected.";
 });
 
 // Signup UI submission.
-signupForm.addEventListener("submit", async (event) => {
+signupForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     if (!checkPassword(signupPassword.value)) {
@@ -689,22 +840,8 @@ signupForm.addEventListener("submit", async (event) => {
         return;
     }
 
-      try {
-        await api("/auth/register", {
-            method: "POST",
-            body: {
-                full_name: document.getElementById("signup-name").value.trim(),
-                email: document.getElementById("signup-email").value.trim(),
-                password: signupPassword.value,
-                date_of_birth: signupDob.value,
-                phone: document.getElementById("phone-country").value + document.getElementById("signup-phone").value.trim()
-            }
-        });
-        authMessage.textContent = "Account created. Please log in.";
-        setAuthMode("login");
-    } catch (err) {
-        authMessage.textContent = err.message;
-    }
+    authMessage.textContent =
+        "Your form passed the basic checks. Account creation and email/phone OTP verification still need to be connected.";
 });
 
 
@@ -810,6 +947,7 @@ if (document.readyState === "loading") {
     restorePageFromURL();
 }
 
+<<<<<<< HEAD
 function updateNavbar() {
     const name = localStorage.getItem("userName");
     const loggedIn = localStorage.getItem("token") && name;
@@ -830,3 +968,5 @@ async function loadCities() {
     }
 }
 loadCities();
+=======
+>>>>>>> 47b0c6b8366a128bd41f777eda9bda87c6fcc7e4

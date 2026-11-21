@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        
+
 <!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER --><!-- HEADER -->
         <header>
             <nav class="NAVBAR">
@@ -298,16 +298,19 @@
         </div>
 
         <!-- Travel class -->
-        <div class="TRAVEL-CLASS-GROUP">
-            <label for="travel-class">Travel class</label>
+        
+<div class="TRAVEL-CLASS-GROUP">
+    <label for="travel-class">Travel class</label>
 
-            <select id="travel-class" name="travel_class">
-                <option value="economy">Economy/Premium Economy</option>
-                <option value="premium-economy">Premium Economy</option>
-                <option value="business">Business</option>
-                <option value="first-class">First Class</option>
-            </select>
-        </div>
+    <select id="travel-class" name="travel_class">
+        <option value="all">All classes</option>
+    </select>
+
+    <p class="CLASS-HELP" id="class-help">
+        Choose a travel class or compare all available classes.
+    </p>
+</div>
+
 
         <!-- Popup footer -->
         <div class="TRAVELLER-POPUP-FOOTER">
@@ -442,7 +445,7 @@
     <div class="AUTH-CARD">
 
         <a href="#" class="AUTH-BACK" id="back-home">
-            ← Back to Home
+            ← Go back
         </a>
 
         <div class="AUTH-LOGO">
@@ -598,14 +601,55 @@
 
 
 
-        <footer class="SITE-FOOTER">
+        
+<footer class="SITE-FOOTER">
+    <div class="FOOTER-MAIN">
+
+        <!-- Brand -->
+        <div class="FOOTER-BRAND">
+            <a href="index.html" class="FOOTER-LOGO">
+                <!-- Use the same logo image path as your navbar -->
+                <img src="images/logo.png" alt="YatriPath logo">
+                <span>Yatri<span class="FOOTER-LOGO-ACCENT">Path</span></span>
+            </a>
+
             <p>
-               © 2026 Yatripath. All rights reserved.
-                <span class="FOOTER-DIVIDER">|</span>
-                <a href="#" id="terms-link">Terms and Conditions</a>
+                One place to search, compare and manage bus,
+                train and flight journeys.
             </p>
-        </footer>
-        <script src="api.js"></script>
+        </div>
+
+        <!-- Explore -->
+        <div class="FOOTER-COLUMN">
+            <h3>EXPLORE</h3>
+            <a href="search.html">Search Trips</a>
+            <a href="#" id="footer-bookings">My Bookings</a>
+            <a href="#" id="footer-profile">Profile</a>
+        </div>
+
+        <!-- Help -->
+        <div class="FOOTER-COLUMN">
+            <h3>HELP</h3>
+            <a href="#">Customer Support</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <!-- Legal -->
+        <div class="FOOTER-COLUMN">
+            <h3>LEGAL</h3>
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="#">About Us</a>
+        </div>
+
+    </div>
+
+    <div class="FOOTER-BOTTOM">
+        <p>© 2026 YatriPath. All rights reserved.</p>
+    </div>
+</footer>
+
 
         <script src="script.js"></script>
     </body>

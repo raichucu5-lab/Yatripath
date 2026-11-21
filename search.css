@@ -1,0 +1,1110 @@
+
+/* =========================================
+   YATRIPATH — SEARCH RESULTS PAGE
+   Polished travel-search interface
+   ========================================= */
+
+:root {
+    --search-accent: #3273ff;
+    --search-accent-dark: #2059dc;
+    --search-teal: #03cfa7;
+    --search-gold: #ebc119;
+    --search-radius: 20px;
+    --search-border: rgba(100, 130, 165, 0.20);
+    --search-shadow: 0 12px 35px rgba(30, 60, 100, 0.07);
+}
+
+/* ---------- PAGE FOUNDATION ---------- */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(
+            ellipse at 8% 12%,
+            rgba(50, 115, 255, 0.055),
+            transparent 36%
+        ),
+        var(--background-color);
+    color: var(--text-color);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button,
+select,
+a,
+label {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--search-accent);
+    outline-offset: 4px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* ---------- MAIN CONTENT ---------- */
+
+.RESULTS-PAGE {
+    width: min(100% - 64px, 1320px);
+    margin: 0 auto;
+    padding: 36px 0 76px;
+}
+
+.RESULTS-PAGE h1,
+.RESULTS-PAGE h2,
+.RESULTS-PAGE h3,
+.RESULTS-PAGE p {
+    overflow-wrap: anywhere;
+}
+
+.RESULTS-PAGE h1,
+.RESULTS-PAGE h2,
+.RESULTS-PAGE h3,
+.RESULTS-PAGE p {
+    margin-top: 0;
+}
+
+/* ---------- INTRO / HERO ---------- */
+
+.RESULTS-INTRO {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin-bottom: 30px;
+    padding: clamp(28px, 5vw, 54px);
+    border: 1px solid rgba(100, 145, 205, 0.17);
+    border-radius: 28px;
+    background:
+        radial-gradient(
+            circle at 88% 18%,
+            rgba(3, 240, 193, 0.19),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(50, 115, 255, 0.15),
+            transparent 35%
+        ),
+        var(--tertiary-color);
+    box-shadow: var(--search-shadow);
+}
+.RESULTS-INTRO {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    min-height: 385px;
+    padding: 64px 60px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(1, 1, 30, 0.805) 25%,
+            rgba(1, 6, 33, 0.558) 50%,
+            rgba(4, 4, 137, 0) 100%
+        ),
+        linear-gradient(
+            55deg,
+            rgba(0, 0, 0, 0.586) 30%,
+            rgba(0, 255, 204, 0) 50%
+        ),
+        url("https://static.vecteezy.com/system/resources/thumbnails/037/248/582/small_2x/ai-generated-travelling-to-thailand-advertisment-background-with-copy-space-free-photo.jpg") center / cover no-repeat;
+
+    color: #ffffff;
+}
+
+.RESULTS-INTRO .BACK-LINK {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.RESULTS-INTRO .RESULTS-TAGLINE {
+    color: #ffd43b;
+}
+
+.RESULTS-INTRO h1 {
+    color: #ffffff;
+}
+
+.RESULTS-INTRO h1 span {
+    background: linear-gradient(90deg, #4385ff, #03f0c1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.RESULTS-INTRO .RESULTS-DESCRIPTION {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+
+
+@media (max-width: 768px) {
+    .RESULTS-INTRO {
+        min-height: 340px;
+        padding: 36px 26px;
+        border-radius: 22px;
+        background-position: center;
+    }
+}
+
+.BACK-LINK {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 34px;
+    color: var(--text-color);
+    opacity: 0.72;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.BACK-LINK:hover {
+    color: var(--search-teal);
+    opacity: 1;
+}
+
+.RESULTS-TAGLINE {
+    margin-bottom: 13px;
+    color: var(--search-gold);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.19em;
+}
+
+.RESULTS-INTRO h1 {
+    max-width: 680px;
+    margin-bottom: 15px;
+    font-size: clamp(2.1rem, 4.7vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 1.1;
+}
+
+.RESULTS-INTRO h1 span {
+    background: linear-gradient(
+        110deg,
+        #3273FF,
+        #03F0C1
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.RESULTS-DESCRIPTION {
+    max-width: 540px;
+    margin-bottom: 0;
+    font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+    line-height: 1.8;
+    opacity: 0.73;
+}
+
+/* ---------- JOURNEY SUMMARY ---------- */
+
+.JOURNEY-SUMMARY {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        35px
+        minmax(0, 1fr)
+        minmax(110px, 0.8fr)
+        minmax(110px, 0.8fr)
+        auto;
+
+    grid-template-areas: "origin destination date travellers edit";
+    align-items: center;
+    gap: 18px;
+
+    margin-bottom: 35px;
+    padding: 24px 26px;
+
+    border: 1px solid var(--search-border);
+    border-radius: var(--search-radius);
+    background: var(--tertiary-color);
+    box-shadow: var(--search-shadow);
+}
+
+.SUMMARY-FROM {
+    grid-area: origin;
+}
+
+
+.SUMMARY-TO {
+    grid-area: destination;
+}
+
+.SUMMARY-DATE {
+    grid-area: date;
+}
+
+.SUMMARY-TRAVELLERS {
+    grid-area: travellers;
+}
+
+.EDIT-SEARCH-BTN {
+    grid-area: edit;
+    justify-self: end;
+}
+
+.SUMMARY-ITEM {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.SUMMARY-ITEM > span {
+    color: var(--text-color);
+    opacity: 0.55;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.SUMMARY-ITEM strong {
+    overflow-wrap: anywhere;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+#result-origin,
+#result-destination {
+    font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+}
+
+#result-date,
+#result-travellers {
+    font-size: 0.88rem;
+}
+
+
+.EDIT-SEARCH-BTN {
+    min-height: 43px;
+    padding: 10px 15px;
+    border: 1px solid var(--search-accent);
+    border-radius: 11px;
+    background: transparent;
+    color: var(--search-accent);
+    font-size: 0.85rem;
+    font-weight: 750;
+    white-space: nowrap;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.EDIT-SEARCH-BTN:hover {
+    background: var(--search-accent);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* ---------- FILTER + RESULTS LAYOUT ---------- */
+
+.RESULTS-LAYOUT {
+    display: grid;
+    grid-template-columns: 255px minmax(0, 1fr);
+    align-items: start;
+    gap: 28px;
+}
+
+.RESULTS-FILTERS {
+    position: sticky;
+    top: 24px;
+    padding: 25px 22px;
+    border: 1px solid var(--search-border);
+    border-radius: var(--search-radius);
+    background: var(--tertiary-color);
+    box-shadow: var(--search-shadow);
+}
+
+.RESULTS-FILTERS h2 {
+    margin-bottom: 10px;
+    font-size: 1.13rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.FILTER-HELP {
+    margin-bottom: 24px;
+    font-size: 0.86rem;
+    line-height: 1.7;
+    opacity: 0.68;
+}
+
+.FILTER-OPTION {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 -5px 8px;
+    padding: 12px 9px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 0.93rem;
+    font-weight: 600;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.FILTER-OPTION:hover {
+    border-color: var(--search-border);
+    background: rgba(50, 115, 255, 0.045);
+}
+
+.FILTER-OPTION input {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--search-accent);
+    cursor: pointer;
+}
+
+
+/* ---------- RESULTS HEADING ---------- */
+
+.RESULTS-CONTENT {
+    min-width: 0;
+}
+
+.RESULTS-HEADING {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.RESULTS-HEADING h2 {
+    margin-bottom: 7px;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    
+}
+
+.RESULTS-HEADING p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.65;
+}
+
+.SORT-CONTROL {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.SORT-CONTROL > span {
+    opacity: 0.65;
+}
+
+.SORT-CONTROL select {
+    max-width: 180px;
+    min-height: 43px;
+    padding: 9px 32px 9px 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 10px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* ---------- JOURNEY CARDS ---------- */
+
+.JOURNEY-CARD {
+    position: relative;
+    min-width: 0;
+    margin-bottom: 18px;
+    padding: 24px;
+    border: 1px solid var(--search-border);
+    border-radius: var(--search-radius);
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    box-shadow: 0 6px 22px rgba(30, 60, 100, 0.045);
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.JOURNEY-CARD:hover {
+    transform: translateY(-3px);
+    border-color: rgba(50, 115, 255, 0.38);
+    box-shadow: 0 15px 36px rgba(30, 60, 100, 0.10);
+}
+
+.JOURNEY-CARD-TOP {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.MODE-BADGE{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 29px;
+    padding: 6px 11px;
+    border-radius: 8px;
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.09em;
+    background: rgba(255, 231, 50, 0.1);
+    color: var(--search-gold);
+}
+
+.JOURNEY-ROUTE {
+    display: grid;
+    grid-template-columns: minmax(75px, 1fr) minmax(90px, 1.2fr) minmax(75px, 1fr);
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.JOURNEY-ROUTE > div:first-child,
+.JOURNEY-ROUTE > div:last-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.JOURNEY-ROUTE > div:last-child {
+    text-align: right;
+}
+
+.JOURNEY-ROUTE > div > strong {
+    color: var(--text-color);
+    font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.ROUTE-CITY {
+    overflow-wrap: anywhere;
+    font-size: 0.84rem;
+    font-weight: 650;
+    opacity: 0.72;
+}
+
+.ROUTE-DURATION {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0px;
+}
+
+.ROUTE-DURATION > span {
+    overflow: hidden;
+    max-width: 100%;
+    color: var(--search-gold);
+    font-size: 0.95rem;
+    letter-spacing: -0.08em;
+    white-space: nowrap;
+}
+
+.ROUTE-DURATION small {
+    color: var(--search-gold);
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 1;
+}
+
+.JOURNEY-CARD-BOTTOM {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-top: 19px;
+    border-top: 1px solid var(--search-border);
+}
+
+.JOURNEY-CARD-BOTTOM > p {
+    margin-bottom: 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    opacity: 0.68;
+    color: var(--search-gold);
+}
+
+.BOOK-BTN {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 45px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(
+        110deg,
+        #3273ff,
+        #03dcb5
+    );
+    color: #FFFFFF;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(50, 115, 255, 0.16);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.BOOK-BTN:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 22px rgba(50, 115, 255, 0.25);
+    filter: saturate(1.1);
+}
+
+.BOOK-BTN:active {
+    transform: translateY(0);
+}
+
+/* ---------- FOOTER ---------- */
+
+.SITE-FOOTER {
+    margin-top: 0;
+}
+
+/* ---------- DARK THEME ---------- */
+
+[data-theme="dark"] body {
+    background:
+        radial-gradient(
+            ellipse at 8% 12%,
+            rgba(50, 115, 255, 0.10),
+            transparent 38%
+        ),
+        var(--background-color);
+}
+
+[data-theme="dark"] .RESULTS-INTRO {
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+[data-theme="dark"] .JOURNEY-SUMMARY,
+[data-theme="dark"] .RESULTS-FILTERS,
+[data-theme="dark"] .JOURNEY-CARD {
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
+}
+
+[data-theme="dark"] .FILTER-OPTION:hover {
+    background: rgba(255, 255, 255, 0.045);
+}
+
+[data-theme="dark"] .FILTER-NOTE {
+    background: rgba(50, 115, 255, 0.12);
+}
+
+[data-theme="dark"] .MODE-BADGE {
+    background: rgba(50, 115, 255, 0.16);
+}
+
+[data-theme="dark"] .JOURNEY-CARD:hover {
+    border-color: rgba(3, 240, 193, 0.42);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .SORT-CONTROL select {
+    color-scheme: dark;
+}
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 1050px) {
+    .RESULTS-PAGE {
+        width: min(100% - 40px, 900px);
+    }
+
+    .JOURNEY-SUMMARY {
+    grid-template-columns:
+        minmax(0, 1fr)
+        35px
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        auto;
+
+    grid-template-areas:
+        "origin destination destination destination"
+        "date date travellers travellers edit";
+
+    align-items: center;
+    gap: 18px 14px;
+}
+
+    .SUMMARY-DATE,
+    .SUMMARY-TRAVELLERS {
+        padding-top: 15px;
+        border-top: 1px solid var(--search-border);
+    }
+
+    .EDIT-SEARCH-BTN {
+        justify-self: end;
+        align-self: end;
+    }
+
+    .RESULTS-LAYOUT {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 20px;
+    }
+
+    .RESULTS-FILTERS {
+        padding: 20px 16px;
+    }
+
+    .JOURNEY-CARD {
+        padding: 20px;
+    }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+    .RESULTS-PAGE {
+        width: calc(100% - 30px);
+        padding: 22px 0 45px;
+    }
+
+    .RESULTS-INTRO {
+        margin-bottom: 20px;
+        padding: 25px 22px 30px;
+        border-radius: 22px;
+    }
+
+    .RESULTS-INTRO::after {
+        top: 35px;
+        right: -5px;
+        font-size: 130px;
+    }
+
+    .BACK-LINK {
+        margin-bottom: 28px;
+    }
+
+    .RESULTS-INTRO h1 {
+        max-width: 430px;
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .RESULTS-DESCRIPTION {
+        max-width: 400px;
+    }
+
+    .JOURNEY-SUMMARY {
+    grid-template-columns: minmax(0, 1fr) 29px minmax(0, 1fr);
+    grid-template-areas:
+        "origin destination"
+        "date travellers travellers"
+        "edit edit edit";
+    gap: 16px 10px;
+    margin-bottom: 25px;
+    padding: 20px 16px;
+    border-radius: 17px;
+}
+
+    .SUMMARY-DATE,
+    .SUMMARY-TRAVELLERS {
+        padding-top: 15px;
+        border-top: 1px solid var(--search-border);
+    }
+
+    .EDIT-SEARCH-BTN {
+        grid-area: edit;
+        justify-self: stretch;
+        align-self: stretch;
+        grid-column: auto;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+    }   
+
+    .SUMMARY-ITEM > span {
+        font-size: 0.62rem;
+    }
+
+    .SUMMARY-ITEM strong {
+        font-size: 0.88rem;
+    }
+
+    .RESULTS-LAYOUT {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .RESULTS-FILTERS {
+        position: static;
+        padding: 20px;
+    }
+
+    .RESULTS-FILTERS h2 {
+        margin-bottom: 6px;
+    }
+
+    .FILTER-HELP {
+        margin-bottom: 14px;
+    }
+
+    .FILTER-OPTION {
+        display: inline-flex;
+        margin: 3px 5px 3px 0;
+        padding: 10px;
+        border-color: var(--search-border);
+    }
+
+    .FILTER-DIVIDER {
+        margin: 17px 0;
+    }
+
+    .RESULTS-HEADING {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 17px;
+    }
+
+    .SORT-CONTROL {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .SORT-CONTROL select {
+        flex: 1;
+        max-width: 230px;
+    }
+
+    .JOURNEY-CARD {
+        padding: 18px;
+        border-radius: 17px;
+    }
+
+    .JOURNEY-CARD-TOP {
+        margin-bottom: 23px;
+    }
+
+    .JOURNEY-ROUTE {
+        grid-template-columns: minmax(0, 1fr) minmax(65px, 0.8fr) minmax(0, 1fr);
+        gap: 8px;
+        margin-bottom: 21px;
+    }
+
+    .JOURNEY-ROUTE > div > strong {
+        font-size: clamp(1.25rem, 5vw, 1.65rem);
+    }
+
+    .ROUTE-CITY {
+        font-size: 0.76rem;
+    }
+
+    .ROUTE-DURATION > span {
+        font-size: 0.75rem;
+    }
+
+    .ROUTE-DURATION small {
+        font-size: 0.65rem;
+    }
+
+    .JOURNEY-CARD-BOTTOM {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 15px;
+        padding-top: 16px;
+    }
+
+    .BOOK-BTN {
+        width: 100%;
+    }
+
+    .RESULTS-FOOTNOTE {
+        padding: 14px;
+    }
+}
+
+
+/* ===== SELECTED CLASS FARE ===== */
+
+.CARD-FARE {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    margin: 0 0 20px;
+    padding: 15px 17px;
+
+    border: 1px solid var(--search-border);
+    border-radius: 13px;
+    background: rgba(15, 179, 149, 0.07);
+}
+
+.CARD-FARE-INFO {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.CARD-FARE-LABEL {
+    font-size: 0.72rem;
+    font-weight: 750;
+    opacity: 0.7;
+}
+
+.CARD-FARE-PRICE {
+    color: var(--search-teal);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 900;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.CARD-FARE-CLASS {
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+.CARD-FARE-DEMO {
+    flex-shrink: 0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: rgba(15, 179, 149, 0.12);
+    color: var(--search-teal);
+    font-size: 0.65rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 380px) {
+    .CARD-FARE {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+/* ---------- SMALL MOBILE ---------- */
+
+@media (max-width: 380px) {
+    .RESULTS-PAGE {
+        width: calc(100% - 22px);
+    }
+
+    .RESULTS-INTRO {
+        padding: 22px 17px 25px;
+    }
+
+    .JOURNEY-SUMMARY {
+        gap: 14px 7px;
+        padding: 17px 12px;
+    }
+
+    .JOURNEY-CARD {
+        padding: 15px 12px;
+    }
+
+    .MODE-BADGE,
+    .DEMO-BADGE {
+        font-size: 0.61rem;
+        padding: 6px 8px;
+    }
+}
+
+/* ---------- REDUCED MOTION ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+/* FAVOURITE ROUTE BUTTON */
+
+.JOURNEY-CARD-TOP {
+    position: relative;
+}
+
+.FAVOURITE-BTN {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin-left: auto;
+    border: none;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.FAVOURITE-BTN:hover {
+    color: #e34d76;
+}
+
+.FAVOURITE-BTN[aria-pressed="true"] {
+    color: #e34d76;
+}
+
+.FAVOURITE-BTN[aria-pressed="true"] i {
+    font-weight: 900;
+}
+
+/* Tooltip ABOVE the favourite icon */
+
+.FAVOURITE-BTN::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 180px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #102746;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.FAVOURITE-BTN:hover::after,
+.FAVOURITE-BTN:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+/* TRAIN CLASS OPTIONS */
+
+.TRAIN-CLASS-SECTION {
+    margin: 8px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--search-border);
+    border-radius: 14px;
+    background: color-mix(
+        in srgb,
+        var(--tertiary-color) 92%,
+        var(--search-accent) 8%
+    );
+}
+
+
+.TRAIN-CLASS-GRID {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.TRAIN-CLASS-OPTION {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 10px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+}
+
+.TRAIN-CLASS-OPTION strong {
+    font-size: 1rem;
+}
+
+.TRAIN-CLASS-OPTION span {
+    font-weight: 800;
+    color: var(--search-accent);
+}
+
+.TRAIN-CLASS-OPTION small {
+    font-size: 0.68rem;
+    opacity: 0.7;
+}
+
+.TRAIN-CLASS-OPTION:hover,
+.TRAIN-CLASS-OPTION.is-selected {
+    border-color: var(--search-accent);
+    box-shadow: 0 0 0 2px rgba(50, 115, 255, 0.10);
+}
+
+.TRAIN-CLASS-OPTION.is-selected {
+    background: rgba(50, 115, 255, 0.08);
+}
+
+.TRAIN-SELECTED-DETAILS {
+    margin: 14px 0 0;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+@media (max-width: 700px) {
+    .TRAIN-CLASS-GRID {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .TRAIN-CLASS-SECTION {
+        padding: 13px;
+    }
+}
