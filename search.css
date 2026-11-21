@@ -241,7 +241,7 @@ select:focus-visible {
         minmax(110px, 0.8fr)
         auto;
 
-    grid-template-areas: "origin arrow destination date travellers edit";
+    grid-template-areas: "origin destination date travellers edit";
     align-items: center;
     gap: 18px;
 
@@ -258,19 +258,6 @@ select:focus-visible {
     grid-area: origin;
 }
 
-.SUMMARY-ARROW {
-    display: grid;
-    width: 35px;
-    height: 35px;
-    place-items: center;
-    justify-self: center;
-
-    border: 1px solid var(--search-teal);
-    border-radius: 50%;
-    background: rgba(15, 179, 149, 0.156);
-    color: var(--search-teal);
-    font-weight: 1000;
-}
 
 .SUMMARY-TO {
     grid-area: destination;
@@ -321,18 +308,6 @@ select:focus-visible {
     font-size: 0.88rem;
 }
 
-.SUMMARY-ARROW {
-    display: grid;
-    width: 35px;
-    height: 35px;
-    place-items: center;
-    border: 1px solid var(--search-teal);
-    border-radius: 50%;
-    background: rgba(15, 179, 149, 0.156);
-    color: var(--search-teal);
-    font-weight: 1000;
-    justify-self: left;
-}
 
 .EDIT-SEARCH-BTN {
     min-height: 43px;
@@ -515,11 +490,8 @@ select:focus-visible {
     font-size: 0.68rem;
     font-weight: 850;
     letter-spacing: 0.09em;
-}
-
-.MODE-BADGE {
-    background: rgba(50, 115, 255, 0.10);
-    color: var(--search-accent);
+    background: rgba(255, 231, 50, 0.1);
+    color: var(--search-gold);
 }
 
 .JOURNEY-ROUTE {
@@ -561,23 +533,23 @@ select:focus-visible {
     min-width: 0;
     flex-direction: column;
     align-items: center;
-    gap: 7px;
+    gap: 0px;
 }
 
 .ROUTE-DURATION > span {
     overflow: hidden;
     max-width: 100%;
-    color: var(--search-accent);
+    color: var(--search-gold);
     font-size: 0.95rem;
     letter-spacing: -0.08em;
     white-space: nowrap;
 }
 
 .ROUTE-DURATION small {
-    color: var(--text-color);
-    font-size: 0.7rem;
+    color: var(--search-gold);
+    font-size: 0.9rem;
     text-align: center;
-    opacity: 0.6;
+    opacity: 1;
 }
 
 .JOURNEY-CARD-BOTTOM {
@@ -597,13 +569,6 @@ select:focus-visible {
     color: var(--search-gold);
 }
 
-.JOURNEY-DISCLOSURE {
-    margin-bottom: 0;
-    font-size: 0.76rem;
-    line-height: 1.6;
-    opacity: 0.62;
-}
-
 .BOOK-BTN {
     display: inline-flex;
     align-items: center;
@@ -618,7 +583,7 @@ select:focus-visible {
         #3273ff,
         #03dcb5
     );
-    color: #071b2c;
+    color: #FFFFFF;
     font-size: 0.86rem;
     font-weight: 800;
     text-decoration: none;
@@ -697,19 +662,20 @@ select:focus-visible {
     }
 
     .JOURNEY-SUMMARY {
-    grid-template-columns: minmax(0, 1fr) 35px minmax(0, 1fr);
+    grid-template-columns:
+        minmax(0, 1fr)
+        35px
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        auto;
+
     grid-template-areas:
-        "origin arrow destination"
-        "date travellers edit";
+        "origin destination destination destination"
+        "date date travellers travellers edit";
+
+    align-items: center;
     gap: 18px 14px;
 }
-
-
-    .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(3),
-    .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(4) {
-        padding-top: 15px;
-        border-top: 1px solid var(--search-border);
-    }
 
     .SUMMARY-DATE,
     .SUMMARY-TRAVELLERS {
@@ -720,10 +686,6 @@ select:focus-visible {
     .EDIT-SEARCH-BTN {
         justify-self: end;
         align-self: end;
-    }
-
-    .EDIT-SEARCH-BTN {
-        justify-self: start;
     }
 
     .RESULTS-LAYOUT {
@@ -776,7 +738,7 @@ select:focus-visible {
     .JOURNEY-SUMMARY {
     grid-template-columns: minmax(0, 1fr) 29px minmax(0, 1fr);
     grid-template-areas:
-        "origin arrow destination"
+        "origin destination"
         "date travellers travellers"
         "edit edit edit";
     gap: 16px 10px;
@@ -791,20 +753,15 @@ select:focus-visible {
         border-top: 1px solid var(--search-border);
     }
 
-    .SUMMARY-ARROW {
-        width: 29px;
-        height: 29px;
-}
-
     .EDIT-SEARCH-BTN {
+        grid-area: edit;
+        justify-self: stretch;
+        align-self: stretch;
         grid-column: auto;
         width: 100%;
-}
-    .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(3),
-    .JOURNEY-SUMMARY .SUMMARY-ITEM:nth-of-type(4) {
-        padding-top: 15px;
-        border-top: 1px solid var(--search-border);
-    }
+        min-width: 0;
+        margin: 0;
+    }   
 
     .SUMMARY-ITEM > span {
         font-size: 0.62rem;
@@ -906,6 +863,68 @@ select:focus-visible {
         padding: 14px;
     }
 }
+
+
+/* ===== SELECTED CLASS FARE ===== */
+
+.CARD-FARE {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    margin: 0 0 20px;
+    padding: 15px 17px;
+
+    border: 1px solid var(--search-border);
+    border-radius: 13px;
+    background: rgba(15, 179, 149, 0.07);
+}
+
+.CARD-FARE-INFO {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.CARD-FARE-LABEL {
+    font-size: 0.72rem;
+    font-weight: 750;
+    opacity: 0.7;
+}
+
+.CARD-FARE-PRICE {
+    color: var(--search-teal);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 900;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.CARD-FARE-CLASS {
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+.CARD-FARE-DEMO {
+    flex-shrink: 0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: rgba(15, 179, 149, 0.12);
+    color: var(--search-teal);
+    font-size: 0.65rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 380px) {
+    .CARD-FARE {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
 
 /* ---------- SMALL MOBILE ---------- */
 

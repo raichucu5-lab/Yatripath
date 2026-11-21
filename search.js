@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const departure = getParam("departure", "");
     const returnDate = getParam("returnDate", "");
     const transport = getParam("transport", "all").toLowerCase();
+    const travelClass = getParam("travelClass", "all").toLowerCase();
 
     const adults = Number(getParam("adults", "1")) || 0;
     const children = Number(getParam("children", "0")) || 0;
@@ -54,81 +55,203 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-route-destination]")
         .forEach(element => element.textContent = destination);
 
-    // --------------------------------------------------
-    // TRANSPORT FILTERS
-    // --------------------------------------------------
+    // -----------------------------------------
+    // 2. TRANSPORT FILTERS AND CLASS FARES
+    // -----------------------------------------
 
-    const cards = [...document.querySelectorAll(".JOURNEY-CARD[data-mode]")];
+    const resultCards = [
+        ...document.querySelectorAll(".JOURNEY-CARD[data-mode]")
+    ];
 
-    const filterInputs = [
+    const filterControls = [
         ...document.querySelectorAll(
             "input[name='transport-filter'][data-filter-mode]"
         )
     ];
 
-    const allFilter = filterInputs.find(
+    const allFilter = filterControls.find(
         input => input.dataset.filterMode === "all"
     );
 
-    function applyFilters() {
-        const allSelected = allFilter?.checked;
+    // Illustrative prices per traveller. Replace with API data later.
+    const fareData = {
+        train: {
+            "1a": { label: "1A — AC First Class", price: 2400 },
+            "2a": { label: "2A — AC 2 Tier", price: 1500 },
+            "3a": { label: "3A — AC 3 Tier", price: 1000 },
+            "3e": { label: "3E — AC 3 Tier Economy", price: 850 },
+            "cc": { label: "CC — AC Chair Car", price: 650 },
+            "ec": { label: "EC — Executive Chair Car", price: 950 },
+            "sl": { label: "SL — Sleeper", price: 450 },
+            "2s": { label: "2S — Second Sitting", price: 180 }
+        },
+
+        bus: {
+            "seater": { label: "Non-AC Seater", price: 450 },
+            "ac-seater": { label: "AC Seater", price: 650 },
+            "sleeper": { label: "Non-AC Sleeper", price: 600 },
+            "ac-sleeper": { label: "AC Sleeper", price: 900 },
+            "volvo-ac": { label: "Volvo AC", price: 1100 },
+            "volvo-ac-sleeper": {
+                label: "Volvo AC Sleeper",
+                price: 1400
+            }
+        },
+
+        flight: {
+            "economy": { label: "Economy", price: 4500 },
+            "premium-economy": {
+                label: "Premium Economy",
+                price: 6500
+            },
+            "business": { label: "Business", price: 15000 },
+            "first-class": { label: "First Class", price: 25000 }
+        }
+    };
+
+    function getFareForCard(mode) {
+        const available = fareData[mode];
+        if (!available) return null;
+
+        if (travelClass === "all") {
+            const cheapest = Object.values(available)
+                .reduce((best, item) =>
+                    item.price < best.price ? item : best
+                );
+
+            return {
+                ...cheapest,
+                isStartingFare: true
+            };
+        }
+
+        const [classMode, className] = travelClass.split(":");
+
+        // A selected class only applies to its own transport mode.
+        if (classMode !== mode || !available[className]) {
+            return null;
+        }
+
+        return {
+            ...available[className],
+            isStartingFare: false
+        };
+    }
+
+    function renderCardFare(card) {
+        const mode = card.dataset.mode.toLowerCase();
+        const fareBox = card.querySelector(".CARD-FARE");
+
+        if (!fareBox) return true;
+
+        const fare = getFareForCard(mode);
+
+        // A mode-specific class cannot be priced on another mode.
+        if (!fare) {
+            fareBox.hidden = true;
+            return false;
+        }
+
+        fareBox.hidden = false;
+
+        const priceElement = fareBox.querySelector(".CARD-FARE-PRICE");
+        const classElement = fareBox.querySelector(".CARD-FARE-CLASS");
+        const labelElement = fareBox.querySelector(".CARD-FARE-LABEL");
+
+        if (priceElement) {
+            priceElement.textContent =
+                `₹${fare.price.toLocaleString("en-IN")}`;
+        }
+
+        if (classElement) {
+            classElement.textContent = fare.label;
+        }
+
+        if (labelElement) {
+            labelElement.textContent = fare.isStartingFare
+                ? "Starting fare · per traveller"
+                : "Selected class · per traveller";
+        }
+
+        card.dataset.fare = String(fare.price);
+        card.dataset.option = travelClass === "all"
+            ? Object.entries(fareData[mode])
+                .find(([, item]) => item.label === fare.label)?.[0] || ""
+            : travelClass.split(":")[1];
+
+        return true;
+    }
+
+    function setTransportSelection(mode) {
+        filterControls.forEach(input => {
+            const controlMode = input.dataset.filterMode;
+
+            input.checked = mode === "all"
+                ? true
+                : controlMode === mode;
+        });
+    }
+
+    function applyTransportFilters() {
+        const allSelected = Boolean(allFilter?.checked);
 
         const selectedModes = new Set(
-            filterInputs
+            filterControls
                 .filter(input =>
                     input !== allFilter && input.checked
                 )
                 .map(input => input.dataset.filterMode)
         );
 
-        cards.forEach(card => {
-            card.hidden = !allSelected &&
-                !selectedModes.has(card.dataset.mode.toLowerCase());
-        });
+        let visibleCount = 0;
 
-        const visibleCount = cards.filter(card => !card.hidden).length;
+        resultCards.forEach(card => {
+            const mode = card.dataset.mode.toLowerCase();
+            const matchesTransport = allSelected || selectedModes.has(mode);
+            const matchesClass = renderCardFare(card);
+
+            card.hidden = !(matchesTransport && matchesClass);
+
+            if (!card.hidden) visibleCount++;
+        });
 
         setText(
             "results-subtitle",
             visibleCount
-                ? `${visibleCount} demo option${visibleCount === 1 ? "" : "s"} shown.`
-                : "No options match the selected transport filters."
+                ? `${visibleCount} demo option${visibleCount === 1 ? "" : "s"} shown. Fares are illustrative, not live prices.`
+                : "No options match the selected transport and class."
         );
     }
 
-    function selectTransport(mode) {
-        filterInputs.forEach(input => {
-            input.checked = mode === "all"
-                ? true
-                : input.dataset.filterMode === mode;
-        });
-
-        applyFilters();
-    }
-
-    filterInputs.forEach(input => {
+    filterControls.forEach(input => {
         input.addEventListener("change", () => {
-            if (input === allFilter) {
-                // Multi-Mode is an all-modes shortcut.
-                filterInputs.forEach(other => {
-                    other.checked = input.checked;
+            const mode = input.dataset.filterMode;
+
+            if (mode === "all") {
+                setTransportSelection(input.checked ? "all" : "none");
+            } else {
+                // Keep the transport filter single-choice.
+                filterControls.forEach(other => {
+                    other.checked = other === input && input.checked;
                 });
-            } else if (input.checked) {
-                // Selecting a specific mode clears Multi-Mode.
-                if (allFilter) allFilter.checked = false;
-            } else if (allFilter) {
-                allFilter.checked = false;
+
+                if (!input.checked && allFilter) {
+                    allFilter.checked = false;
+                }
             }
 
-            applyFilters();
+            applyTransportFilters();
         });
     });
 
-    selectTransport(
-        ["all", "flight", "train", "bus"].includes(transport)
-            ? transport
-            : "all"
-    );
+    if (["flight", "train", "bus"].includes(transport)) {
+        setTransportSelection(transport);
+    } else {
+        setTransportSelection("all");
+    }
+
+    applyTransportFilters();
+
 
     // --------------------------------------------------
     // FAVOURITE ROUTES — SAVED IN THIS BROWSER
@@ -325,13 +448,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 returnDate,
                 transport: card.dataset.mode,
                 travellers: travellerCount,
+
+                selectedClass: travelClass,
                 selectedDemoOption: card.dataset.option || null,
                 demoFare: card.dataset.fare
-                    ? Number(card.dataset.fare)
-                    : null,
-                demoSeats: card.dataset.seats
-                    ? Number(card.dataset.seats)
-                    : null,
+                ? Number(card.dataset.fare)
+                : null,
+
                 returnTo: window.location.pathname + window.location.search
             };
 

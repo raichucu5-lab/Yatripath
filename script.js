@@ -160,6 +160,147 @@ travellerTrigger?.addEventListener("click", () => {
 });
 
 
+
+/* =========================================
+   TRANSPORT-SPECIFIC TRAVEL CLASSES
+========================================= */
+
+const transportRadios = [
+    ...document.querySelectorAll('input[name="transport"]')
+];
+
+const classSelect = document.querySelector("#travel-class");
+const classHelp = document.querySelector("#class-help");
+
+const classesByTransport = {
+    flight: [
+        { value: "flight:economy", label: "Economy" },
+        { value: "flight:premium-economy", label: "Premium Economy" },
+        { value: "flight:business", label: "Business" },
+        { value: "flight:first-class", label: "First Class" }
+    ],
+
+    train: [
+        { value: "train:1A", label: "1A — AC First Class" },
+        { value: "train:2A", label: "2A — AC 2 Tier" },
+        { value: "train:3A", label: "3A — AC 3 Tier" },
+        { value: "train:3E", label: "3E — AC 3 Tier Economy" },
+        { value: "train:CC", label: "CC — AC Chair Car" },
+        { value: "train:EC", label: "EC — Executive Chair Car" },
+        { value: "train:SL", label: "SL — Sleeper" },
+        { value: "train:2S", label: "2S — Second Sitting" }
+    ],
+
+    bus: [
+        { value: "bus:seater", label: "Non-AC Seater" },
+        { value: "bus:ac-seater", label: "AC Seater" },
+        { value: "bus:sleeper", label: "Non-AC Sleeper" },
+        { value: "bus:ac-sleeper", label: "AC Sleeper" },
+        { value: "bus:volvo-ac", label: "Volvo AC" },
+        { value: "bus:volvo-ac-sleeper", label: "Volvo AC Sleeper" }
+    ]
+};
+
+function getSelectedTransport() {
+    return document.querySelector(
+        'input[name="transport"]:checked'
+    )?.value || "all";
+}
+
+function updateTravelClassOptions(preferredValue = "all") {
+    if (!classSelect) return;
+
+    const mode = getSelectedTransport();
+
+    let availableClasses;
+
+    if (mode === "all") {
+        availableClasses = Object.values(classesByTransport).flat();
+    } else {
+        availableClasses = classesByTransport[mode] || [];
+    }
+
+    classSelect.replaceChildren();
+
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "All classes";
+    classSelect.appendChild(allOption);
+
+    availableClasses.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.value;
+        option.textContent = mode === "all"
+            ? `${item.label} (${item.value.split(":")[0]})`
+            : item.label;
+
+        classSelect.appendChild(option);
+    });
+
+    const valueExists = [...classSelect.options].some(
+        option => option.value === preferredValue
+    );
+
+    classSelect.value = valueExists ? preferredValue : "all";
+
+    if (classHelp) {
+        classHelp.textContent = mode === "all"
+            ? "Choose All Classes or a specific mode and class."
+            : `Choose a ${mode} class or compare all its classes.`;
+    }
+}
+
+transportRadios.forEach(radio => {
+    radio.addEventListener("change", () => {
+        if (radio.checked) {
+            updateTravelClassOptions("all");
+        }
+    });
+});
+
+// Initialise the class dropdown.
+updateTravelClassOptions();
+/* RESTORE SEARCH DETAILS WHEN EDIT SEARCH IS CLICKED */
+
+const incomingParams = new URLSearchParams(window.location.search);
+
+if (incomingParams.has("transport")) {
+    const incomingTransport = incomingParams.get("transport");
+
+    const matchingRadio = transportRadios.find(
+        radio => radio.value === incomingTransport
+    );
+
+    if (matchingRadio) {
+        matchingRadio.checked = true;
+    }
+}
+
+updateTravelClassOptions(
+    incomingParams.get("travelClass") || "all"
+);
+
+const restoredOrigin = document.querySelector("#origin");
+const restoredDestination = document.querySelector("#destination");
+const restoredDeparture = document.querySelector("#departure");
+const restoredReturn = document.querySelector("#return-date");
+
+if (restoredOrigin && incomingParams.has("origin")) {
+    restoredOrigin.value = incomingParams.get("origin");
+}
+
+if (restoredDestination && incomingParams.has("destination")) {
+    restoredDestination.value = incomingParams.get("destination");
+}
+
+if (restoredDeparture && incomingParams.has("departure")) {
+    restoredDeparture.value = incomingParams.get("departure");
+}
+
+if (restoredReturn && incomingParams.has("returnDate")) {
+    restoredReturn.value = incomingParams.get("returnDate");
+}
+
 /* UPDATE PASSENGER TOTAL */
 
 function updatePassengerTotal() {
@@ -415,20 +556,20 @@ journeyForm?.addEventListener("submit", (event) => {
     const selectedTransport =
     document.querySelector('input[name="transport"]:checked')?.value || "all";
     // Build the URL with the user's search details.
-    const params = new URLSearchParams({
-        origin: origin,
-        transport: selectedTransport,
-        destination: destination,
-        departure: departureDate,
-        returnDate: returnDate?.value || "",
-        travellers: travellers?.value || "1",
-        adults: document.querySelector("#adults")?.value || "1",
-        children: document.querySelector("#children")?.value || "0",
-        infants: document.querySelector("#infants")?.value || "0",
-        travelClass: travelClass?.value || "Economy"
-    });
+const params = new URLSearchParams({
+    origin: origin,
+    destination: destination,
+    departure: departureDate,
+    returnDate: returnDate?.value || "",
+    travellers: travellers?.value || "1",
+    adults: document.querySelector("#adults")?.value || "1",
+    children: document.querySelector("#children")?.value || "0",
+    infants: document.querySelector("#infants")?.value || "0",
+    transport: getSelectedTransport(),
+    travelClass: travelClass?.value || "all"
+});
 
-    window.location.href = `search.html?${params.toString()}`;
+window.location.href = `search.html?${params.toString()}`;
 });
 
 
