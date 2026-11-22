@@ -299,15 +299,16 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 ========================================= */
 
 .HERO {
-    padding: clamp(2rem, 4vw, 3.5rem) 5% 3rem;
-    overflow: hidden;
     background-color: var(--background-color);
+    padding: clamp(2rem, 4vw, 3rem) 5%;
+    overflow: hidden;
 }
 
 .HERO-CONTENT {
-    max-width: 60rem;
-    margin: 0 auto clamp(1.5rem, 3vw, 2.5rem);
-    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    text-align: left;
 }
 
 .HERO-TAGLINE {
@@ -694,7 +695,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     border-radius: 0.75rem;
 
     background: var(--primary-color);
-    color: #ffffff;
+    color: #07172a;
 
     font-family: inherit;
     font-size: 1rem;
@@ -710,7 +711,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 .SEARCH-BTN:hover {
     background: var(--highlight-color);
-    color: #07172a;
+    color: #ffffff;
     transform: translateY(-0.1rem);
 }
 
@@ -794,8 +795,8 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     }
 
     .LOGO img{
-        width: 11rem;
-        height: 3rem;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
     /* Closed by default */
@@ -927,7 +928,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
     .SWAP-BTN {
         width: 1.8rem;
-        top: 1.55rem;
     }
 
     /* Supporting note */
@@ -948,7 +948,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     }
 
     .SEARCH-FORM {
-        column-gap: 1.25rem;
+        column-gap: 0.35rem;
         row-gap: 0.5rem;
     }
 
@@ -971,7 +971,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     }
 
     .SWAP-BTN {
-        top: 2.2rem;
         width: 1.5rem;
     }
 }
@@ -1324,10 +1323,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 /* ===== HERO TWO-COLUMN LAYOUT ===== */
 
-.HERO {
-    padding: clamp(2rem, 4vw, 3rem) 5%;
-    overflow: hidden;
-}
 
 .HERO-LAYOUT {
     display: grid;
@@ -1342,13 +1337,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 /* Left column */
 .HERO-BOX {
     min-width: 0;
-}
-
-.HERO-CONTENT {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    text-align: left;
 }
 
 /* Right column */
@@ -1619,7 +1607,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 .AUTH-CARD {
     min-width: 0;
-    padding-top: 1rem;
     align-self: center;
     width: 100%;
     max-width: none;
@@ -2072,7 +2059,7 @@ main[hidden] {
     padding: 1.5rem 5% 1.5rem;
     background: var(--tertiary-color);
     color: var(--text-color);
-    box-shadow: 0 0.5rem 1.5rem rgba(10, 4, 58, 0.153);;
+    box-shadow: 0 0.5rem 1.5rem rgba(10, 4, 58, 0.153);
 }
 
 .FOOTER-MAIN {
@@ -2101,7 +2088,7 @@ main[hidden] {
     );
     background-clip: text;
     -webkit-background-clip: text;
-    color: transparent;;
+    color: transparent;
     font-size: clamp(1.5rem, 2vw, 2rem);
     font-weight: 800;
     text-decoration: none;
@@ -2132,7 +2119,7 @@ main[hidden] {
 
 .FOOTER-COLUMN h3 {
     margin: 0 0 0.35rem;
-    color: #ffffff;
+    color: var(--text-color);
     font-size: 0.9rem;
     font-weight: 750;
 }
@@ -2165,7 +2152,7 @@ main[hidden] {
     line-height : 1.6;
 }
 
-/* Responsive footer */
+
 
 /* Responsive footer */
 

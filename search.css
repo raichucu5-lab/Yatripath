@@ -235,7 +235,6 @@ select:focus-visible {
     display: grid;
     grid-template-columns:
         minmax(0, 1fr)
-        35px
         minmax(0, 1fr)
         minmax(110px, 0.8fr)
         minmax(110px, 0.8fr)
@@ -664,24 +663,17 @@ select:focus-visible {
     .JOURNEY-SUMMARY {
     grid-template-columns:
         minmax(0, 1fr)
-        35px
         minmax(0, 1fr)
         minmax(0, 1fr)
         auto;
-
     grid-template-areas:
-        "origin destination destination destination"
-        "date date travellers travellers edit";
-
+        "origin destination "
+        "date travellers "
+        "edit";
     align-items: center;
     gap: 18px 14px;
 }
 
-    .SUMMARY-DATE,
-    .SUMMARY-TRAVELLERS {
-        padding-top: 15px;
-        border-top: 1px solid var(--search-border);
-    }
 
     .EDIT-SEARCH-BTN {
         justify-self: end;
@@ -736,22 +728,22 @@ select:focus-visible {
     }
 
     .JOURNEY-SUMMARY {
-    grid-template-columns: minmax(0, 1fr) 29px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
         "origin destination"
-        "date travellers travellers"
-        "edit edit edit";
+        "date travellers"
+        "edit edit";
     gap: 16px 10px;
     margin-bottom: 25px;
     padding: 20px 16px;
     border-radius: 17px;
 }
-
-    .SUMMARY-DATE,
+.SUMMARY-DATE,
     .SUMMARY-TRAVELLERS {
         padding-top: 15px;
         border-top: 1px solid var(--search-border);
     }
+    
 
     .EDIT-SEARCH-BTN {
         grid-area: edit;
@@ -907,17 +899,6 @@ select:focus-visible {
     opacity: 0.75;
 }
 
-.CARD-FARE-DEMO {
-    flex-shrink: 0;
-    padding: 6px 8px;
-    border-radius: 6px;
-    background: rgba(15, 179, 149, 0.12);
-    color: var(--search-teal);
-    font-size: 0.65rem;
-    font-weight: 850;
-    letter-spacing: 0.04em;
-}
-
 @media (max-width: 380px) {
     .CARD-FARE {
         align-items: flex-start;
@@ -1003,11 +984,13 @@ select:focus-visible {
 
 /* Tooltip ABOVE the favourite icon */
 
+/* Anchor favourite tooltip to the right so it stays inside the card */
 .FAVOURITE-BTN::after {
     content: attr(title);
     position: absolute;
     bottom: calc(100% + 9px);
-    left: 50%;
+    right: 0;
+    left: auto;
     z-index: 20;
     width: max-content;
     max-width: 180px;
@@ -1022,7 +1005,7 @@ select:focus-visible {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translate(-50%, 4px);
+    transform: translateY(4px);
     transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
@@ -1030,12 +1013,12 @@ select:focus-visible {
 .FAVOURITE-BTN:focus-visible::after {
     opacity: 1;
     visibility: visible;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
 }
 
 /* TRAIN CLASS OPTIONS */
 
-.TRAIN-CLASS-SECTION {
+.TRAVEL-CLASS-SECTION {
     margin: 8px 0 22px;
     padding: 18px;
     border: 1px solid var(--search-border);
@@ -1048,13 +1031,13 @@ select:focus-visible {
 }
 
 
-.TRAIN-CLASS-GRID {
+.TRAVEL-CLASS-GRID {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
 }
 
-.TRAIN-CLASS-OPTION {
+.TRAVEL-CLASS-OPTION {
     display: flex;
     min-width: 0;
     flex-direction: column;
@@ -1069,27 +1052,27 @@ select:focus-visible {
     cursor: pointer;
 }
 
-.TRAIN-CLASS-OPTION strong {
+.TRAVEL-CLASS-OPTION strong {
     font-size: 1rem;
 }
 
-.TRAIN-CLASS-OPTION span {
+.TRAVEL-CLASS-OPTION span {
     font-weight: 800;
     color: var(--search-accent);
 }
 
-.TRAIN-CLASS-OPTION small {
+.TRAVEL-CLASS-OPTION small {
     font-size: 0.68rem;
     opacity: 0.7;
 }
 
-.TRAIN-CLASS-OPTION:hover,
-.TRAIN-CLASS-OPTION.is-selected {
+.TRAVEL-CLASS-OPTION:hover,
+.TRAVEL-CLASS-OPTION.is-selected {
     border-color: var(--search-accent);
     box-shadow: 0 0 0 2px rgba(50, 115, 255, 0.10);
 }
 
-.TRAIN-CLASS-OPTION.is-selected {
+.TRAVEL-CLASS-OPTION.is-selected {
     background: rgba(50, 115, 255, 0.08);
 }
 
@@ -1100,11 +1083,122 @@ select:focus-visible {
 }
 
 @media (max-width: 700px) {
-    .TRAIN-CLASS-GRID {
+    .TRAVEL-CLASS-GRID {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .TRAIN-CLASS-SECTION {
+    .TRAVEL-CLASS-SECTION {
         padding: 13px;
     }
 }
+
+/* UNIVERSAL TRAVEL CLASS OPTIONS */
+
+.TRAVEL-CLASS-SECTION {
+    margin: 8px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--search-border);
+    border-radius: 14px;
+    background: color-mix(
+        in srgb,
+        var(--tertiary-color) 92%,
+        var(--search-accent) 8%
+    );
+}
+
+.TRAVEL-CLASS-GRID {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.TRAVEL-CLASS-OPTION {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 11px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.TRAVEL-CLASS-OPTION strong,
+.TRAVEL-CLASS-OPTION span,
+.TRAVEL-CLASS-OPTION small {
+    overflow-wrap: anywhere;
+}
+
+.TRAVEL-CLASS-OPTION span {
+    font-weight: 700;
+}
+
+.TRAVEL-CLASS-OPTION small {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.TRAVEL-CLASS-OPTION.is-selected {
+    border: 2px solid var(--search-accent);
+    background: color-mix(
+        in srgb,
+        var(--search-accent) 9%,
+        var(--tertiary-color)
+    );
+}
+
+.TRAVEL-CLASS-OPTION.is-selected span {
+    font-weight: 900;
+}
+
+.ITINERARY-LEG {
+    margin-top: 18px;
+}
+
+.ITINERARY-LEG h4 {
+    margin-bottom: 12px;
+}
+
+.ITINERARY-TRANSFER {
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 10px;
+    background: color-mix(
+        in srgb,
+        var(--search-accent) 8%,
+        var(--tertiary-color)
+    );
+    color: var(--search-gold);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ITINERARY-TOTAL {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--search-border);
+    font-weight: 700;
+}
+
+.ITINERARY-TOTAL strong {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--search-accent);
+}
+
+@media (max-width: 700px) {
+    .TRAVEL-CLASS-GRID {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .TRAVEL-CLASS-SECTION {
+        padding: 12px;
+    }
+}
+
