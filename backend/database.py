@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, String
+from sqlalchemy import create_engine, String ,ForeignKey
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 
 load_dotenv()
@@ -28,6 +28,27 @@ class Station(Base):
     city: Mapped[str] = mapped_column(String(100))
     type: Mapped[str] = mapped_column(String(20))
 
+
+class Route(Base):
+    __tablename__ = "routes"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    transport: Mapped[str] = mapped_column(String(10))      # train / bus / flight
+    operator: Mapped[str] = mapped_column(String(100))
+    origin: Mapped[str] = mapped_column(String(100))
+    destination: Mapped[str] = mapped_column(String(100))
+    depart_time: Mapped[str] = mapped_column(String(5))     # "06:30"
+    arrive_time: Mapped[str] = mapped_column(String(5))
+    duration_min: Mapped[int]
+
+
+class RouteClass(Base):
+    __tablename__ = "route_classes"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id"))
+    code: Mapped[str] = mapped_column(String(30))           # "3a", "economy"
+    label: Mapped[str] = mapped_column(String(60))
+    price: Mapped[int]
+    seats: Mapped[int]
 
 def get_db():
     db = SessionLocal()

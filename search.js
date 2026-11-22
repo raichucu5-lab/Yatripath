@@ -1,5 +1,4 @@
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
 
     const getParam = (key, fallback = "") =>
@@ -55,9 +54,100 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-route-destination]")
         .forEach(element => element.textContent = destination);
 
-    // -----------------------------------------
+
     // 2. TRANSPORT FILTERS AND CLASS FARES
-    // -----------------------------------------
+   
+
+    // Load real routes from the backend (demo cards stay if it is down)
+    const esc = value => String(value).replace(/[&<>"']/g, ch => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+
+    function renderRoutes(routes) {
+        document.querySelectorAll(".JOURNEY-CARD[data-mode]")
+            .forEach(card => card.remove());
+
+        const inr = value => `₹${value.toLocaleString("en-IN")}`;
+
+        const html = routes.map(r => {
+            const classes = Object.fromEntries(
+                r.classes.map(c => [c.code, { label: c.label, price: c.price }])
+            );
+
+            const [h, m] = r.depart_time.split(":").map(Number);
+            const dayShift = Math.floor((h * 60 + m + r.duration_min) / 1440);
+
+            const trainClasses = r.transport === "train" ? `
+                <div class="TRAIN-CLASS-SECTION"><div class="TRAIN-CLASS-GRID">
+                    ${r.classes.map(c => `
+                    <button type="button"
+                            class="TRAIN-CLASS-OPTION${travelClass === "train:" + c.code ? " is-selected" : ""}"
+                            data-class="${esc(c.code.toUpperCase())}"
+                            data-fare="${c.price}" data-seats="${c.seats}"
+                            aria-pressed="${travelClass === "train:" + c.code}">
+                        <strong>${esc(c.code.toUpperCase())}</strong>
+                        <span>${inr(c.price)}</span>
+                        <small>${c.seats} seats</small>
+                    </button>`).join("")}
+                </div></div>` : "";
+
+            return `
+            <article class="JOURNEY-CARD" data-mode="${esc(r.transport)}"
+                     data-route-id="${r.id}" data-live="1"
+                     data-classes="${esc(JSON.stringify(classes))}">
+                <div class="JOURNEY-CARD-TOP">
+                    <span class="MODE-BADGE">${esc(r.transport.toUpperCase())} · ${esc(r.operator)}</span>
+                    <button type="button" class="FAVOURITE-BTN"
+                            aria-label="Mark as favourite" aria-pressed="false"
+                            title="Mark as favourite">
+                        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="JOURNEY-ROUTE">
+                    <div>
+                        <strong>${esc(r.depart_time)}</strong>
+                        <span class="ROUTE-CITY">${esc(r.origin)}</span>
+                    </div>
+                    <div class="ROUTE-DURATION">
+                        <small>${Math.floor(r.duration_min / 60)}h ${r.duration_min % 60}m</small>
+                        <span>───────────────────────────────────</span>
+                    </div>
+                    <div>
+                        <strong>${esc(r.arrive_time)}${dayShift ? ` (+${dayShift})` : ""}</strong>
+                        <span class="ROUTE-CITY">${esc(r.destination)}</span>
+                    </div>
+                </div>
+                ${trainClasses}
+                <div class="CARD-FARE" aria-live="polite">
+                    <div class="CARD-FARE-INFO">
+                        <span class="CARD-FARE-LABEL">Selected class fare</span>
+                        <strong class="CARD-FARE-PRICE">—</strong>
+                        <small class="CARD-FARE-CLASS">Choose a travel class</small>
+                    </div>
+                </div>
+                <div class="JOURNEY-CARD-BOTTOM">
+                    <button type="button" class="BOOK-BTN"
+                            data-book-mode="${esc(r.transport)}">
+                        Continue to book
+                    </button>
+                </div>
+            </article>`;
+        }).join("");
+
+        document.querySelector(".RESULTS-HEADING")
+            .insertAdjacentHTML("afterend", html);
+    }
+
+    if (params.get("origin") && params.get("destination")) {
+        try {
+            renderRoutes(await api(
+                `/search?origin=${encodeURIComponent(origin)}` +
+                `&destination=${encodeURIComponent(destination)}`
+            ));
+        } catch (err) {
+            console.error("Search failed, showing demo cards:", err.message);
+        }
+    }
 
     const resultCards = [
         ...document.querySelectorAll(".JOURNEY-CARD[data-mode]")
@@ -109,8 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    function getFareForCard(mode) {
-        const available = fareData[mode];
+    function getFareForCard(card) {
+        const mode = card.dataset.mode.toLowerCase();
+        const available = card.dataset.classes
+            ? JSON.parse(card.dataset.classes)
+            : fareData[mode];
         if (!available) return null;
 
         if (travelClass === "all") {
@@ -144,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!fareBox) return true;
 
-        const fare = getFareForCard(mode);
+        const fare = getFareForCard(card);
 
         // A mode-specific class cannot be priced on another mode.
         if (!fare) {
@@ -175,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.dataset.fare = String(fare.price);
         card.dataset.option = travelClass === "all"
-            ? Object.entries(fareData[mode])
+            ? Object.entries(JSON.parse(card.dataset.classes || "null") || fareData[mode])
                 .find(([, item]) => item.label === fare.label)?.[0] || ""
             : travelClass.split(":")[1];
 
@@ -218,7 +311,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setText(
             "results-subtitle",
             visibleCount
-                ? `${visibleCount} demo option${visibleCount === 1 ? "" : "s"} shown. Fares are illustrative, not live prices.`
+                ? `${visibleCount} option${visibleCount === 1 ? "" : "s"} shown.` +
+                  (resultCards.some(card => card.dataset.live) ? "" : " Demo data: fares are illustrative.")
                 : "No options match the selected transport and class."
         );
     }
@@ -253,9 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTransportFilters();
 
 
-    // --------------------------------------------------
-    // FAVOURITE ROUTES — SAVED IN THIS BROWSER
-    // --------------------------------------------------
+    // FAVOURITE ROUTES —SAVED IN THIS BROWSER
+    
 
     const FAVOURITES_KEY = "yatripath-favourite-routes";
 
@@ -332,9 +425,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --------------------------------------------------
+
     // TRAIN CLASS SELECTION
-    // --------------------------------------------------
+   
 
     document.querySelectorAll(".JOURNEY-CARD[data-mode='train']")
         .forEach(card => {
@@ -379,9 +472,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-    // --------------------------------------------------
+    
     // LIGHT / DARK THEME
-    // --------------------------------------------------
+ 
 
     const themeToggle = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("travelleon-theme");
@@ -423,19 +516,17 @@ document.addEventListener("DOMContentLoaded", () => {
         updateThemeButton();
     });
 
-    // --------------------------------------------------
+
     // EDIT SEARCH
-    // --------------------------------------------------
 
     document.getElementById("edit-search")?.addEventListener("click", () => {
         window.location.href =
             `index.html?${params.toString()}`;
     });
 
-    // --------------------------------------------------
+   
     // BOOKING HANDOFF — DEMO UNTIL BACKEND INTEGRATION
-    // --------------------------------------------------
-
+  
     document.querySelectorAll(".BOOK-BTN").forEach(button => {
         button.addEventListener("click", () => {
             const card = button.closest(".JOURNEY-CARD[data-mode]");

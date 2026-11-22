@@ -4,7 +4,11 @@ async function api(path, { method = "GET", body } = {}) {
   const token = localStorage.getItem("token");
   if (token) headers.Authorization = "Bearer " + token;
   const res = await fetch(API_BASE + path, { method, headers, body: body && JSON.stringify(body) });
-  if (!res.ok) {
+   if (!res.ok) {
+    if (res.status === 401 && token) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userName");
+    }
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || "Request failed");
   }
