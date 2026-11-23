@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 document.addEventListener("DOMContentLoaded", async () => {
-=======
-document.addEventListener("DOMContentLoaded", () => {
->>>>>>> Stashed changes
     const params = new URLSearchParams(window.location.search);
 
     const getParam = (key, fallback = "") =>
@@ -90,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         element.textContent = destination;
     });
 
-<<<<<<< Updated upstream
 
     // 2. TRANSPORT FILTERS AND CLASS FARES
    
@@ -112,25 +107,33 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             const [h, m] = r.depart_time.split(":").map(Number);
-            const dayShift = Math.floor((h * 60 + m + r.duration_min) / 1440);
+            const departMinutes = h * 60 + m;
+            const dayShift = Math.floor((departMinutes + r.duration_min) / 1440);
 
             const trainClasses = r.transport === "train" ? `
-                <div class="TRAIN-CLASS-SECTION"><div class="TRAIN-CLASS-GRID">
-                    ${r.classes.map(c => `
+                <div class="TRAIN-CLASS-SECTION" data-class-section data-leg-mode="train"><div class="TRAIN-CLASS-GRID">
+                    ${r.classes.map(c => {
+                        const codeKey = normalizeClass(c.code);
+                        const isSelected = activeTravelClass === `train:${codeKey}`;
+                        return `
                     <button type="button"
-                            class="TRAIN-CLASS-OPTION${travelClass === "train:" + c.code ? " is-selected" : ""}"
-                            data-class="${esc(c.code.toUpperCase())}"
+                            class="TRAIN-CLASS-OPTION${isSelected ? " is-selected" : ""}"
+                            data-class="${esc(c.code)}"
+                            data-label="${esc(c.label)}"
                             data-fare="${c.price}" data-seats="${c.seats}"
-                            aria-pressed="${travelClass === "train:" + c.code}">
+                            aria-pressed="${isSelected}">
                         <strong>${esc(c.code.toUpperCase())}</strong>
                         <span>${inr(c.price)}</span>
                         <small>${c.seats} seats</small>
-                    </button>`).join("")}
+                    </button>`;
+                    }).join("")}
                 </div></div>` : "";
 
             return `
             <article class="JOURNEY-CARD" data-mode="${esc(r.transport)}"
                      data-route-id="${r.id}" data-live="1"
+                     data-departure="${departMinutes}"
+                     data-duration="${r.duration_min}"
                      data-classes="${esc(JSON.stringify(classes))}">
                 <div class="JOURNEY-CARD-TOP">
                     <span class="MODE-BADGE">${esc(r.transport.toUpperCase())} · ${esc(r.operator)}</span>
@@ -185,11 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Search failed, showing demo cards:", err.message);
         }
     }
-=======
-    // -----------------------------------------
-    // 1. MOBILE MENU
-    // -----------------------------------------
->>>>>>> Stashed changes
 
     const mobileMenuButton = document.querySelector("#mobile-menu-toggle");
     const navbar = document.querySelector(".NAVBAR");
@@ -263,9 +261,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
 
         bus: {
-            "non-ac-seater": { label: "Non-AC Seater", price: 450 },
+            "seater": { label: "Non-AC Seater", price: 450 },
             "ac-seater": { label: "AC Seater", price: 650 },
-            "non-ac-sleeper": { label: "Non-AC Sleeper", price: 600 },
+            "sleeper": { label: "Non-AC Sleeper", price: 600 },
             "ac-sleeper": { label: "AC Sleeper", price: 900 },
             "volvo-ac": { label: "Volvo AC", price: 1100 },
             "volvo-ac-sleeper": { label: "Volvo AC Sleeper", price: 1400 }
@@ -279,22 +277,71 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-<<<<<<< Updated upstream
     function getFareForCard(card) {
-        const mode = card.dataset.mode.toLowerCase();
-        const available = card.dataset.classes
-            ? JSON.parse(card.dataset.classes)
-            : fareData[mode];
+        const mode = (card.dataset.mode || "").toLowerCase();
+        let available = fareData[mode] || null;
+
+        if (card.dataset.classes) {
+            try {
+                const parsed = JSON.parse(card.dataset.classes);
+                available = Object.fromEntries(
+                    Object.entries(parsed).map(([k, v]) => [normalizeClass(k), v])
+                );
+            } catch {
+                // Fall back to demo fares if backend JSON is malformed
+            }
+        }
+
         if (!available) return null;
-=======
+
+        const entries = Object.entries(available);
+        if (!entries.length) return null;
+
+        if (activeTravelClass === "all") {
+            const [optionKey, cheapest] = entries.reduce((best, entry) =>
+                entry[1].price < best[1].price ? entry : best
+            );
+
+            return {
+                ...cheapest,
+                optionKey,
+                isStartingFare: true
+            };
+        }
+
+        if (activeTravelClass.includes(":")) {
+            const [classMode, className] = activeTravelClass.split(":");
+            const normalizedKey = normalizeClass(className);
+
+            // A selected class only applies to its own transport mode.
+            if (classMode !== mode || !available[normalizedKey]) {
+                return null;
+            }
+
+            return {
+                ...available[normalizedKey],
+                optionKey: normalizedKey,
+                isStartingFare: false
+            };
+        }
+
+        const normalizedKey = normalizeClass(activeTravelClass);
+        if (!available[normalizedKey]) return null;
+
+        return {
+            ...available[normalizedKey],
+            optionKey: normalizedKey,
+            isStartingFare: false
+        };
+    }
+        
     function getClassOptions(section) {
         return [
             ...section.querySelectorAll(
-                ".TRAVEL-CLASS-OPTION, .TRAIN-CLASS-OPTION"
+                ".TRAIN-CLASS-OPTION, .BUS-CLASS-OPTION, .FLIGHT-CLASS-OPTION, .TRAVEL-CLASS-OPTION"
             )
         ];
     }
->>>>>>> Stashed changes
 
     function getSectionMode(section) {
         const leg = section.closest("[data-leg-mode]");
@@ -328,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return {
             classKey,
-            label: metadata?.label || option?.dataset.class || "Travel class",
+            label: option?.dataset.label || metadata?.label || option?.dataset.class || "Travel class",
             price: Number.isFinite(suppliedFare) && suppliedFare > 0
                 ? suppliedFare
                 : (metadata?.price || 0)
@@ -357,20 +404,13 @@ document.addEventListener("DOMContentLoaded", () => {
         { price, label, isStartingFare, optionKey }
     ) {
         const fareBox = card.querySelector(".CARD-FARE");
-<<<<<<< Updated upstream
+
+        card.dataset.fare = String(price);
+        if (optionKey) {
+            card.dataset.option = optionKey;
+        }
 
         if (!fareBox) return true;
-
-        const fare = getFareForCard(card);
-
-        // A mode-specific class cannot be priced on another mode.
-        if (!fare) {
-            fareBox.hidden = true;
-            return false;
-        }
-=======
-        if (!fareBox) return;
->>>>>>> Stashed changes
 
         fareBox.hidden = false;
 
@@ -392,18 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 : "Selected class · per traveller";
         }
 
-<<<<<<< Updated upstream
-        card.dataset.fare = String(fare.price);
-        card.dataset.option = travelClass === "all"
-            ? Object.entries(JSON.parse(card.dataset.classes || "null") || fareData[mode])
-                .find(([, item]) => item.label === fare.label)?.[0] || ""
-            : travelClass.split(":")[1];
-=======
-        card.dataset.fare = String(price);
-
-        if (optionKey) {
-            card.dataset.option = optionKey;
-        }
+        return true;
     }
 
     function updateItineraryTotal(card) {
@@ -444,6 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // 1. Replace getRequestedClassForMode
     function getRequestedClassForMode(mode) {
         if (activeTravelClass === "all") return null;
 
@@ -451,17 +481,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (separator !== -1) {
             const requestedMode = activeTravelClass.slice(0, separator);
-            const requestedClass = activeTravelClass.slice(separator + 1);
+            const requestedClass = normalizeClass(activeTravelClass.slice(separator + 1));
 
             return requestedMode === mode ? requestedClass : null;
         }
 
-        return fareData[mode]?.[activeTravelClass]
-            ? activeTravelClass
-            : null;
+        const normalized = normalizeClass(activeTravelClass);
+        return fareData[mode]?.[normalized] ? normalized : null;
     }
 
-    function selectClass(section, button, { shouldSort = true } = {}) {
+    // 2. Replace selectClass opening & the two click-listener loops right below it
+    function selectClass(section, button, { shouldSort = true, fromUser = false } = {}) {
         const options = getClassOptions(section);
 
         options.forEach(option => {
@@ -474,7 +504,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = section.closest(".JOURNEY-CARD[data-mode]");
         if (!card) return;
 
-        const mode = getSectionMode(section);
+        if (fromUser) {
+            card.dataset.userSelectedClass = "1";
+        }
+
         const selection = getSectionSelection(section);
 
         if (!selection) return;
@@ -500,23 +533,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (shouldSort) sortResultCards();
     }
 
-    // Attach universal class selection to single-mode cards and
+    // Attach class selection to single-mode cards and
     // to every leg inside multi-mode cards.
     document.querySelectorAll("[data-class-section]").forEach(section => {
         getClassOptions(section).forEach(button => {
             button.addEventListener("click", () => {
-                selectClass(section, button);
+                selectClass(section, button, { fromUser: true });
             });
         });
     });
 
-    // Also support existing class sections without data-class-section.
-    document.querySelectorAll(".TRAVEL-CLASS-SECTION").forEach(section => {
+    // Also support per-mode class sections without data-class-section.
+    document.querySelectorAll(
+        ".TRAIN-CLASS-SECTION, .BUS-CLASS-SECTION, .FLIGHT-CLASS-SECTION"
+    ).forEach(section => {
         if (section.hasAttribute("data-class-section")) return;
 
         getClassOptions(section).forEach(button => {
             button.addEventListener("click", () => {
-                selectClass(section, button);
+                selectClass(section, button, { fromUser: true });
             });
         });
     });
@@ -530,9 +565,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const fareBox = card.querySelector(".CARD-FARE");
+
+        // A mode-specific class (e.g. "train:3a") cannot match another mode.
+        if (activeTravelClass !== "all" && activeTravelClass.includes(":")) {
+            const requestedMode = activeTravelClass.slice(0, activeTravelClass.indexOf(":"));
+            if (requestedMode !== mode) {
+                if (fareBox) fareBox.hidden = true;
+                return false;
+            }
+        }
+
         const sections = [...card.querySelectorAll("[data-class-section]")];
 
-        // If the card doesn't use a class selector, preserve its existing fare.
         if (!fareBox && !sections.length) return true;
 
         const section = sections[0];
@@ -554,10 +598,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 return true;
             }
 
-            // "All classes": use the cheapest available demo class.
+            // 3. Inside renderCardFare(card), replace the `const options = getClassOptions(section); if (options.length) { ... }` block
             const options = getClassOptions(section);
 
             if (options.length) {
+                if (card.dataset.userSelectedClass === "1") {
+                    const current = getSelectedOption(section);
+                    if (current) {
+                        selectClass(section, current, { shouldSort: false });
+                        return true;
+                    }
+                }
+
                 const cheapest = options.reduce((best, option) => {
                     const currentFare = getOptionFare(mode, option).price;
                     const bestFare = getOptionFare(mode, best).price;
@@ -582,43 +634,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Fallback for cards that only use the demo fare table.
-        const available = fareData[mode];
+        // Cards without a class grid (e.g. live backend bus/flight cards) use getFareForCard().
+        const fare = getFareForCard(card);
 
-        if (!available) return true;
-
-        const requestedClass = getRequestedClassForMode(mode);
-
-        if (requestedClass) {
-            const fare = available[requestedClass];
-
-            if (!fare) {
-                if (fareBox) fareBox.hidden = true;
-                return false;
-            }
-
-            updateCardFareDisplay(card, {
-                ...fare,
-                label: fare.label,
-                isStartingFare: false,
-                optionKey: requestedClass
-            });
-
-            return true;
+        if (!fare) {
+            if (fareBox) fareBox.hidden = true;
+            return false;
         }
 
-        const [optionKey, cheapest] = Object.entries(available)
-            .reduce((best, entry) =>
-                entry[1].price < best[1].price ? entry : best
-            );
-
-        updateCardFareDisplay(card, {
-            ...cheapest,
-            isStartingFare: true,
-            optionKey
-        });
->>>>>>> Stashed changes
-
+        updateCardFareDisplay(card, fare);
         return true;
     }
 
@@ -829,15 +853,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     applyTransportFilters();
 
-<<<<<<< Updated upstream
 
-    // FAVOURITE ROUTES —SAVED IN THIS BROWSER
+    // FAVOURITE ROUTES 
     
-=======
-    // -----------------------------------------
-    // 4. FAVOURITE ROUTES
-    // -----------------------------------------
->>>>>>> Stashed changes
 
     const FAVOURITES_KEY = "yatripath-favourite-routes";
 
@@ -861,7 +879,7 @@ document.addEventListener("DOMContentLoaded", () => {
             destination.toLowerCase(),
             departure,
             card.dataset.mode.toLowerCase(),
-            card.dataset.itinerary || ""
+            card.dataset.routeId || card.dataset.itinerary || ""
         ].join("|");
     }
 
@@ -913,62 +931,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-<<<<<<< Updated upstream
 
-    // TRAIN CLASS SELECTION
-   
-
-    document.querySelectorAll(".JOURNEY-CARD[data-mode='train']")
-        .forEach(card => {
-            const options = [
-                ...card.querySelectorAll(".TRAIN-CLASS-OPTION")
-            ];
-
-            const details = card.querySelector(".TRAIN-SELECTED-DETAILS");
-
-            function selectTrainClass(button) {
-                options.forEach(option => {
-                    const selected = option === button;
-
-                    option.classList.toggle("is-selected", selected);
-                    option.setAttribute("aria-pressed", String(selected));
-                });
-
-                card.dataset.option = button.dataset.class;
-                card.dataset.fare = button.dataset.fare;
-                card.dataset.seats = button.dataset.seats;
-
-                if (details) {
-                    details.textContent =
-                        `Selected: ${button.dataset.class} · ` +
-                        `₹${Number(button.dataset.fare).toLocaleString("en-IN")} · ` +
-                        `${button.dataset.seats} demo seats`;
-                }
-            }
-
-            options.forEach(button => {
-                button.addEventListener("click", () => {
-                    selectTrainClass(button);
-                });
-            });
-
-            const initiallySelected =
-                options.find(option => option.classList.contains("is-selected")) ||
-                options[0];
-
-            if (initiallySelected) {
-                selectTrainClass(initiallySelected);
-            }
-        });
-
+    // Train, bus, and flight class selection is handled via [data-class-section] above.
     
     // LIGHT / DARK THEME
  
-=======
-    // -----------------------------------------
-    // 5. LIGHT / DARK THEME
-    // -----------------------------------------
->>>>>>> Stashed changes
 
     const themeToggle = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("travelleon-theme");
@@ -1007,29 +974,15 @@ document.addEventListener("DOMContentLoaded", () => {
         updateThemeButton();
     });
 
-<<<<<<< Updated upstream
 
     // EDIT SEARCH
-=======
-    // -----------------------------------------
-    // 6. EDIT SEARCH
-    // -----------------------------------------
->>>>>>> Stashed changes
 
     document.getElementById("edit-search")?.addEventListener("click", () => {
         window.location.href = `index.html?${params.toString()}`;
     });
 
-<<<<<<< Updated upstream
    
     // BOOKING HANDOFF — DEMO UNTIL BACKEND INTEGRATION
-  
-=======
-    // -----------------------------------------
-    // 7. BOOKING HANDOFF
-    // -----------------------------------------
-
->>>>>>> Stashed changes
     document.querySelectorAll(".BOOK-BTN").forEach(button => {
         button.addEventListener("click", () => {
             const card = button.closest(".JOURNEY-CARD[data-mode]");
@@ -1088,8 +1041,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 legs,
                 demoFare: totalFare,
-                isDemoFare: true,
+                isDemoFare: !card.dataset.live,
 
+                routeId: card.dataset.routeId || null,
                 itineraryId: card.dataset.itinerary || null,
 
                 returnTo: window.location.pathname + window.location.search

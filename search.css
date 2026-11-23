@@ -91,28 +91,6 @@ select:focus-visible {
     isolation: isolate;
     overflow: hidden;
     margin-bottom: 30px;
-    padding: clamp(28px, 5vw, 54px);
-    border: 1px solid rgba(100, 145, 205, 0.17);
-    border-radius: 28px;
-    background:
-        radial-gradient(
-            circle at 88% 18%,
-            rgba(3, 240, 193, 0.19),
-            transparent 26%
-        ),
-        radial-gradient(
-            circle at 100% 100%,
-            rgba(50, 115, 255, 0.15),
-            transparent 35%
-        ),
-        var(--tertiary-color);
-    box-shadow: var(--search-shadow);
-}
-.RESULTS-INTRO {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-
     min-height: 385px;
     padding: 64px 60px;
 
@@ -123,6 +101,7 @@ select:focus-visible {
 
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 30px;
+    box-shadow: var(--search-shadow);
 
     background:
         linear-gradient(
@@ -154,14 +133,16 @@ select:focus-visible {
 }
 
 .RESULTS-INTRO h1 span {
-    background: linear-gradient(90deg, #4385ff, #03f0c1);
+    background: linear-gradient(110deg, #4385ff, #03f0c1);
     -webkit-background-clip: text;
     background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
 }
 
 .RESULTS-INTRO .RESULTS-DESCRIPTION {
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(255, 255, 255, 0.84);
+    opacity: 1;
 }
 
 
@@ -208,17 +189,6 @@ select:focus-visible {
     font-weight: 800;
     letter-spacing: -0.055em;
     line-height: 1.1;
-}
-
-.RESULTS-INTRO h1 span {
-    background: linear-gradient(
-        110deg,
-        #3273FF,
-        #03F0C1
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
 }
 
 .RESULTS-DESCRIPTION {
@@ -664,12 +634,10 @@ select:focus-visible {
     grid-template-columns:
         minmax(0, 1fr)
         minmax(0, 1fr)
-        minmax(0, 1fr)
         auto;
     grid-template-areas:
-        "origin destination "
-        "date travellers "
-        "edit";
+        "origin destination edit"
+        "date travellers edit";
     align-items: center;
     gap: 18px 14px;
 }
@@ -677,7 +645,7 @@ select:focus-visible {
 
     .EDIT-SEARCH-BTN {
         justify-self: end;
-        align-self: end;
+        align-self: center;
     }
 
     .RESULTS-LAYOUT {
@@ -1015,10 +983,11 @@ select:focus-visible {
     visibility: visible;
     transform: translateY(0);
 }
+/* =========================================
+   TRAIN CLASS OPTIONS
+========================================= */
 
-/* TRAIN CLASS OPTIONS */
-
-.TRAVEL-CLASS-SECTION {
+.TRAIN-CLASS-SECTION {
     margin: 8px 0 22px;
     padding: 18px;
     border: 1px solid var(--search-border);
@@ -1030,89 +999,13 @@ select:focus-visible {
     );
 }
 
-
-.TRAVEL-CLASS-GRID {
+.TRAIN-CLASS-GRID {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
 }
 
-.TRAVEL-CLASS-OPTION {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 12px;
-    border: 1px solid var(--search-border);
-    border-radius: 10px;
-    background: var(--tertiary-color);
-    color: var(--text-color);
-    text-align: left;
-    cursor: pointer;
-}
-
-.TRAVEL-CLASS-OPTION strong {
-    font-size: 1rem;
-}
-
-.TRAVEL-CLASS-OPTION span {
-    font-weight: 800;
-    color: var(--search-accent);
-}
-
-.TRAVEL-CLASS-OPTION small {
-    font-size: 0.68rem;
-    opacity: 0.7;
-}
-
-.TRAVEL-CLASS-OPTION:hover,
-.TRAVEL-CLASS-OPTION.is-selected {
-    border-color: var(--search-accent);
-    box-shadow: 0 0 0 2px rgba(50, 115, 255, 0.10);
-}
-
-.TRAVEL-CLASS-OPTION.is-selected {
-    background: rgba(50, 115, 255, 0.08);
-}
-
-.TRAIN-SELECTED-DETAILS {
-    margin: 14px 0 0;
-    font-size: 0.82rem;
-    font-weight: 650;
-}
-
-@media (max-width: 700px) {
-    .TRAVEL-CLASS-GRID {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .TRAVEL-CLASS-SECTION {
-        padding: 13px;
-    }
-}
-
-/* UNIVERSAL TRAVEL CLASS OPTIONS */
-
-.TRAVEL-CLASS-SECTION {
-    margin: 8px 0 22px;
-    padding: 18px;
-    border: 1px solid var(--search-border);
-    border-radius: 14px;
-    background: color-mix(
-        in srgb,
-        var(--tertiary-color) 92%,
-        var(--search-accent) 8%
-    );
-}
-
-.TRAVEL-CLASS-GRID {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.TRAVEL-CLASS-OPTION {
+.TRAIN-CLASS-OPTION {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1124,25 +1017,37 @@ select:focus-visible {
     background: var(--tertiary-color);
     color: var(--text-color);
     text-align: left;
+    cursor: pointer;
 }
 
-.TRAVEL-CLASS-OPTION strong,
-.TRAVEL-CLASS-OPTION span,
-.TRAVEL-CLASS-OPTION small {
+.TRAIN-CLASS-OPTION strong,
+.TRAIN-CLASS-OPTION span,
+.TRAIN-CLASS-OPTION small {
     overflow-wrap: anywhere;
 }
 
-.TRAVEL-CLASS-OPTION span {
-    font-weight: 700;
+.TRAIN-CLASS-OPTION strong {
+    font-size: 1rem;
 }
 
-.TRAVEL-CLASS-OPTION small {
+.TRAIN-CLASS-OPTION span {
+    font-weight: 800;
+    color: var(--search-accent);
+}
+
+.TRAIN-CLASS-OPTION small {
+    font-size: 0.72rem;
     color: var(--text-color);
     opacity: 0.7;
 }
 
-.TRAVEL-CLASS-OPTION.is-selected {
-    border: 2px solid var(--search-accent);
+.TRAIN-CLASS-OPTION:hover,
+.TRAIN-CLASS-OPTION.is-selected {
+    border-color: var(--search-accent);
+    box-shadow: 0 0 0 1px var(--search-accent);
+}
+
+.TRAIN-CLASS-OPTION.is-selected {
     background: color-mix(
         in srgb,
         var(--search-accent) 9%,
@@ -1150,9 +1055,165 @@ select:focus-visible {
     );
 }
 
-.TRAVEL-CLASS-OPTION.is-selected span {
+.TRAIN-CLASS-OPTION.is-selected span {
     font-weight: 900;
 }
+
+/* =========================================
+   BUS CLASS OPTIONS
+========================================= */
+
+.BUS-CLASS-SECTION {
+    margin: 8px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--search-border);
+    border-radius: 14px;
+    background: color-mix(
+        in srgb,
+        var(--tertiary-color) 92%,
+        var(--search-teal) 8%
+    );
+}
+
+.BUS-CLASS-GRID {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.BUS-CLASS-OPTION {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 11px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+}
+
+.BUS-CLASS-OPTION strong,
+.BUS-CLASS-OPTION span,
+.BUS-CLASS-OPTION small {
+    overflow-wrap: anywhere;
+}
+
+.BUS-CLASS-OPTION strong {
+    font-size: 0.95rem;
+}
+
+.BUS-CLASS-OPTION span {
+    font-weight: 800;
+    color: var(--search-teal);
+}
+
+.BUS-CLASS-OPTION small {
+    font-size: 0.72rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.BUS-CLASS-OPTION:hover,
+.BUS-CLASS-OPTION.is-selected {
+    border-color: var(--search-teal);
+    box-shadow: 0 0 0 1px var(--search-teal);
+}
+
+.BUS-CLASS-OPTION.is-selected {
+    background: color-mix(
+        in srgb,
+        var(--search-teal) 9%,
+        var(--tertiary-color)
+    );
+}
+
+.BUS-CLASS-OPTION.is-selected span {
+    font-weight: 900;
+}
+
+/* =========================================
+   FLIGHT CLASS OPTIONS
+========================================= */
+
+.FLIGHT-CLASS-SECTION {
+    margin: 8px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--search-border);
+    border-radius: 14px;
+    background: color-mix(
+        in srgb,
+        var(--tertiary-color) 92%,
+        var(--search-gold) 8%
+    );
+}
+
+.FLIGHT-CLASS-GRID {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.FLIGHT-CLASS-OPTION {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--search-border);
+    border-radius: 11px;
+    background: var(--tertiary-color);
+    color: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+}
+
+.FLIGHT-CLASS-OPTION strong,
+.FLIGHT-CLASS-OPTION span,
+.FLIGHT-CLASS-OPTION small {
+    overflow-wrap: anywhere;
+}
+
+.FLIGHT-CLASS-OPTION strong {
+    font-size: 0.95rem;
+}
+
+.FLIGHT-CLASS-OPTION span {
+    font-weight: 800;
+    color: var(--search-accent);
+}
+
+.FLIGHT-CLASS-OPTION small {
+    font-size: 0.72rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.FLIGHT-CLASS-OPTION:hover,
+.FLIGHT-CLASS-OPTION.is-selected {
+    border-color: var(--search-accent);
+    box-shadow: 0 0 0 1px var(--search-accent);
+}
+
+.FLIGHT-CLASS-OPTION.is-selected {
+    background: color-mix(
+        in srgb,
+        var(--search-accent) 9%,
+        var(--tertiary-color)
+    );
+}
+
+.FLIGHT-CLASS-OPTION.is-selected span {
+    font-weight: 900;
+}
+
+/* =========================================
+   MULTI-MODE ITINERARY LEGS
+========================================= */
 
 .ITINERARY-LEG {
     margin-top: 18px;
@@ -1193,12 +1254,15 @@ select:focus-visible {
 }
 
 @media (max-width: 700px) {
-    .TRAVEL-CLASS-GRID {
+    .TRAIN-CLASS-GRID,
+    .BUS-CLASS-GRID,
+    .FLIGHT-CLASS-GRID {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .TRAVEL-CLASS-SECTION {
+    .TRAIN-CLASS-SECTION,
+    .BUS-CLASS-SECTION,
+    .FLIGHT-CLASS-SECTION {
         padding: 12px;
     }
 }
-

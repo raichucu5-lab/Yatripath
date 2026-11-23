@@ -345,7 +345,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 .HERO-DESCRIPTION {
     max-width: 36rem;
-    margin: 0.75rem auto 0;
+    margin: 0.75rem 0 0;
     color: var(--text-color);
     font-size: clamp(0.9rem, 1.3vw, 1.05rem);
     line-height: 1.7;
@@ -619,6 +619,12 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     color-scheme: dark;
 }
 
+[data-theme="dark"] .AUTH-CARD form input[type="date"],
+[data-theme="dark"] .AUTH-CARD form select,
+[data-theme="dark"] .TRAVEL-CLASS-GROUP select {
+    color-scheme: dark;
+}
+
 /* Dropdown options */
 
 .FIELD-INPUT select option {
@@ -824,7 +830,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 
     .NAV-LINKS {
-        justify-content: flex-start;
         gap: 1rem;
         display: flex;
         flex-direction: column;
@@ -1315,11 +1320,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
     overflow-wrap: normal;
 }
 
-#traveller-summary {
-    line-height: 1.5;
-}
-
-
 
 /* ===== HERO TWO-COLUMN LAYOUT ===== */
 
@@ -1335,7 +1335,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 }
 
 /* Left column */
-.HERO-BOX {
+.HERO-LEFT {
     min-width: 0;
 }
 
@@ -1634,6 +1634,7 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 .AUTH-LOGO {
     display: flex;
+    align-items: center;
     margin-bottom: 1.25rem;
 }
 
@@ -1987,8 +1988,6 @@ html:not([data-theme="dark"]) .SEARCH-CARD {
 
 .PASSWORD-RULES:not([hidden]) {
     display: block;
-    margin-top: 0.65rem;
-    color: red;
 }
 
 /*smooth transition of login signup with homepage*/
